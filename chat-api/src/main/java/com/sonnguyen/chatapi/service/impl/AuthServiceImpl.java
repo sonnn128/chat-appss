@@ -12,6 +12,7 @@ import com.sonnguyen.chatapi.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,8 +35,7 @@ public class AuthServiceImpl implements AuthService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
         );
-
-        User user = (User) userDetailsService.loadUserByUsername(loginRequest.getEmail());
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String jwtToken = jwtService.generateToken(user);
 
         return AuthResponse.builder()
@@ -51,10 +51,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse register(RegisterRequest registerRequest) {
-        if (userRepository.existsByEmail(registerRequest.getEmail())) {
-            throw new IllegalArgumentException("Email is already in use");
-        }
-
         User user = User.builder()
                 .firstname(registerRequest.getFirstname())  // ✅ Thêm firstname
                 .lastname(registerRequest.getLastname())    // ✅ Thêm lastname
