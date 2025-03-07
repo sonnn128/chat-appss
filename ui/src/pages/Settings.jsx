@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import {
   Avatar,
   IconButton,
@@ -9,6 +10,8 @@ import {
   ListItemText,
   Switch,
   Divider,
+  Button,
+  Box,
 } from "@mui/material";
 import {
   ArrowBack,
@@ -18,20 +21,31 @@ import {
   Palette,
   DarkMode,
   LightMode,
+  ExitToApp,
 } from "@mui/icons-material";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { logout } from "../stores/slices/authSlice";
+import { successToast } from "../utils/toast";
+
+const sections = [
+  { name: "Account", icon: <AccountCircle /> },
+  { name: "Notifications", icon: <Notifications /> },
+  { name: "Privacy", icon: <Lock /> },
+  { name: "Appearance", icon: <Palette /> },
+];
 
 function Settings() {
   const [selectedSection, setSelectedSection] = useState("Account");
   const [darkMode, setDarkMode] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const sections = [
-    { name: "Account", icon: <AccountCircle /> },
-    { name: "Notifications", icon: <Notifications /> },
-    { name: "Privacy", icon: <Lock /> },
-    { name: "Appearance", icon: <Palette /> },
-  ];
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login");
+    successToast("Log out successfully");
+  };
 
   const renderContent = () => {
     switch (selectedSection) {
@@ -41,146 +55,235 @@ function Settings() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3 }}
-            className="p-6"
           >
-            <Typography variant="h5" className="font-bold text-gray-900 mb-4">
-              Account Settings
-            </Typography>
-            <div className="flex items-center gap-4 mb-6">
-              <Avatar sx={{ width: 80, height: 80, bgcolor: "#FF6F61" }} />
-              <div>
-                <Typography variant="h6" className="text-gray-900 font-semibold">
-                  John Doe
-                </Typography>
-                <Typography variant="body2" className="text-gray-600">
-                  john.doe@example.com
-                </Typography>
-              </div>
-            </div>
-            <button className="px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-all">
-              Edit Profile
-            </button>
+            <Box sx={{ p: 4 }}>
+              <Typography variant="h5" sx={{ fontWeight: "bold", mb: 3 }}>
+                Account Settings
+              </Typography>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 3, mb: 4 }}>
+                <Avatar sx={{ width: 80, height: 80, bgcolor: "#FF6F61" }} />
+                <Box>
+                  <Typography variant="h6" sx={{ fontWeight: "medium", mb: 1 }}>
+                    John Doe
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    john.doe@example.com
+                  </Typography>
+                </Box>
+              </Box>
+              <Box sx={{ display: "flex", gap: 2 }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  aria-label="Edit profile"
+                >
+                  Edit Profile
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="error"
+                  startIcon={<ExitToApp />}
+                  onClick={handleLogout}
+                  aria-label="Log out"
+                >
+                  Log Out
+                </Button>
+              </Box>
+            </Box>
           </motion.div>
         );
+
       case "Notifications":
         return (
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3 }}
-            className="p-6"
           >
-            <Typography variant="h5" className="font-bold text-gray-900 mb-4">
-              Notifications
-            </Typography>
-            <List>
-              <ListItem>
-                <ListItemText primary="Message Notifications" secondary="Receive notifications for new messages" />
-                <Switch defaultChecked />
-              </ListItem>
-              <Divider />
-              <ListItem>
-                <ListItemText primary="Sound" secondary="Play sound for new messages" />
-                <Switch defaultChecked />
-              </ListItem>
-            </List>
+            <Box sx={{ p: 4 }}>
+              <Typography variant="h5" sx={{ fontWeight: "bold", mb: 3 }}>
+                Notifications
+              </Typography>
+              <List disablePadding>
+                <ListItem sx={{ py: 1.5 }}>
+                  <ListItemText
+                    primary="Message Notifications"
+                    secondary="Receive notifications for new messages"
+                  />
+                  <Switch defaultChecked />
+                </ListItem>
+                <Divider />
+                <ListItem sx={{ py: 1.5 }}>
+                  <ListItemText
+                    primary="Sound"
+                    secondary="Play sound for new messages"
+                  />
+                  <Switch defaultChecked />
+                </ListItem>
+              </List>
+            </Box>
           </motion.div>
         );
+
       case "Privacy":
         return (
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3 }}
-            className="p-6"
           >
-            <Typography variant="h5" className="font-bold text-gray-900 mb-4">
-              Privacy Settings
-            </Typography>
-            <List>
-              <ListItem>
-                <ListItemText primary="Who can see my status?" />
-                <Typography variant="body2" className="text-blue-500">
-                  Everyone
-                </Typography>
-              </ListItem>
-              <Divider />
-              <ListItem>
-                <ListItemText primary="Block Contacts" />
-                <button className="text-blue-500 hover:underline">Manage</button>
-              </ListItem>
-            </List>
+            <Box sx={{ p: 4 }}>
+              <Typography variant="h5" sx={{ fontWeight: "bold", mb: 3 }}>
+                Privacy Settings
+              </Typography>
+              <List disablePadding>
+                <ListItem sx={{ py: 1.5 }}>
+                  <ListItemText primary="Who can see my status?" />
+                  <Typography variant="body2" color="primary">
+                    Everyone
+                  </Typography>
+                </ListItem>
+                <Divider />
+                <ListItem sx={{ py: 1.5 }}>
+                  <ListItemText primary="Block Contacts" />
+                  <Button color="primary" variant="text">
+                    Manage
+                  </Button>
+                </ListItem>
+              </List>
+            </Box>
           </motion.div>
         );
+
       case "Appearance":
         return (
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3 }}
-            className="p-6"
           >
-            <Typography variant="h5" className="font-bold text-gray-900 mb-4">
-              Appearance
-            </Typography>
-            <List>
-              <ListItem>
-                <ListItemText primary="Dark Mode" />
-                <Switch checked={darkMode} onChange={() => setDarkMode(!darkMode)} />
-              </ListItem>
-              <Divider />
-              <ListItem>
-                <ListItemIcon>{darkMode ? <DarkMode /> : <LightMode />}</ListItemIcon>
-                <ListItemText primary={darkMode ? "Dark Theme" : "Light Theme"} />
-              </ListItem>
-            </List>
+            <Box sx={{ p: 4 }}>
+              <Typography variant="h5" sx={{ fontWeight: "bold", mb: 3 }}>
+                Appearance
+              </Typography>
+              <List disablePadding>
+                <ListItem sx={{ py: 1.5 }}>
+                  <ListItemText primary="Dark Mode" />
+                  <Switch
+                    checked={darkMode}
+                    onChange={() => setDarkMode(!darkMode)}
+                  />
+                </ListItem>
+                <Divider />
+                <ListItem sx={{ py: 1.5 }}>
+                  <ListItemIcon>
+                    {darkMode ? <DarkMode /> : <LightMode />}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={darkMode ? "Dark Theme" : "Light Theme"}
+                  />
+                </ListItem>
+              </List>
+            </Box>
           </motion.div>
         );
+
       default:
         return null;
     }
   };
 
   return (
-    <div className="flex h-screen bg-gray-100 font-sans antialiased overflow-hidden">
-      {/* Sidebar */}
+    <Box sx={{ display: "flex", height: "100vh", bgcolor: "grey.100" }}>
       <motion.div
-        initial={{ x: -300 }}
+        initial={{ x: -500 }}
         animate={{ x: 0 }}
         transition={{ type: "spring", stiffness: 100 }}
-        className="w-64 bg-white border-r flex flex-col"
+        sx={{
+          width: 500, // Increased to 500px for a noticeable change
+          bgcolor: "background.paper",
+          borderRight: 1,
+          borderColor: "divider",
+          display: "flex",
+          flexDirection: "column",
+          boxShadow: 1,
+          // Debug styling to ensure width is applied
+          border: "2px solid red", // Temporary border to visualize width
+        }}
       >
-        <div className="p-4 bg-blue-600 text-white flex items-center gap-2">
+        <Box
+          sx={{
+            p: 3,
+            bgcolor: "primary.main",
+            color: "white",
+            display: "flex",
+            alignItems: "center",
+            gap: 2,
+          }}
+        >
           <Link to="/">
-            <IconButton sx={{ color: "white" }}>
+            <IconButton sx={{ color: "white" }} aria-label="Back">
               <ArrowBack />
             </IconButton>
           </Link>
-          <Typography variant="h6" className="font-bold">
+          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
             Settings
           </Typography>
-        </div>
-        <List className="flex-1">
+        </Box>
+        <List sx={{ flex: 1, py: 2 }}>
           {sections.map((section) => (
             <ListItem
               key={section.name}
-              button
               onClick={() => setSelectedSection(section.name)}
               sx={{
-                bgcolor: selectedSection === section.name ? "#f1f5f9" : "transparent",
-                "&:hover": { bgcolor: "#f1f5f9" },
+                py: 1.5,
+                px: 3,
+                bgcolor:
+                  selectedSection === section.name
+                    ? "primary.light"
+                    : "transparent",
+                color:
+                  selectedSection === section.name
+                    ? "primary.contrastText"
+                    : "inherit",
+                "&:hover": {
+                  bgcolor:
+                    selectedSection === section.name
+                      ? "primary.light"
+                      : "grey.100",
+                },
+                cursor: "pointer",
+                transition: "background-color 0.2s",
               }}
             >
-              <ListItemIcon>{section.icon}</ListItemIcon>
+              <ListItemIcon
+                sx={{
+                  minWidth: 40,
+                  color:
+                    selectedSection === section.name
+                      ? "primary.contrastText"
+                      : "inherit",
+                }}
+              >
+                {section.icon}
+              </ListItemIcon>
               <ListItemText primary={section.name} />
             </ListItem>
           ))}
         </List>
       </motion.div>
 
-      {/* Content */}
-      <div className="flex-1 bg-white overflow-y-auto">{renderContent()}</div>
-    </div>
+      <Box
+        sx={{
+          flex: 1,
+          bgcolor: "background.paper",
+          overflowY: "auto",
+          p: 2,
+        }}
+      >
+        {renderContent()}
+      </Box>
+    </Box>
   );
 }
 

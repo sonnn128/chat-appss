@@ -25,7 +25,7 @@ const authSlice = createSlice({
             })
             .addCase(fetchUserProfile.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.user = action.payload.user;
+                state.user = action.payload;
                 state.token = action.payload.token;
                 state.isLogin = true;
                 localStorage.setItem('token', action.payload.token);
@@ -40,7 +40,7 @@ const authSlice = createSlice({
             })
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.user = action.payload.user;
+                state.user = action.payload;
                 state.token = action.payload.token;
                 state.isLogin = true;
                 localStorage.setItem('token', action.payload.token);

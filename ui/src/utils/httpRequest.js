@@ -1,6 +1,3 @@
-/**note
- * data in post and put: backend received at req.body
- */
 import axios from 'axios';
 
 // Create an axios instance

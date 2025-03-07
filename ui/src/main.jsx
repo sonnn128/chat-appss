@@ -5,7 +5,9 @@ import store from "./stores/store.jsx";
 import App from "./App.jsx";
 
 createRoot(document.getElementById("root")).render(
-  <Provider store={store}>
-    <App />
-  </Provider>
+  <BrowserRouter>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </BrowserRouter>
 );

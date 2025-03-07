@@ -15,3 +15,10 @@ export const loginUser = createAsyncThunk('loginUser', async ({ email = '', pass
     return res;
 });
 
+
+export const registerUser = createAsyncThunk('registerUser', async ({...registerData}) => {
+    const res = await authServices.register({
+        ...registerData
+    });
+    return res;
+});
