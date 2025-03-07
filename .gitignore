@@ -56,3 +56,6 @@ chat-server/*.iml
 chat-server/*.ipr
 
 storage-server
+
+### Note
+*.md
