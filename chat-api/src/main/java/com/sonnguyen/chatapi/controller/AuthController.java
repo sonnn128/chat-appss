@@ -25,4 +25,8 @@ public class AuthController {
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
         return ResponseEntity.ok(service.login(request));
     }
+    @GetMapping("/me")
+    public ResponseEntity<AuthResponse> authenticate() {
+        return ResponseEntity.ok(service.authenticate());
+    }
 }

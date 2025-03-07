@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Avatar,
   IconButton,
@@ -40,6 +40,8 @@ function Settings() {
   const [darkMode, setDarkMode] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const user = useSelector(state => state.auth.user);
+  console.log("user setting: ", user);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -61,13 +63,17 @@ function Settings() {
                 Account Settings
               </Typography>
               <Box sx={{ display: "flex", alignItems: "center", gap: 3, mb: 4 }}>
-                <Avatar sx={{ width: 80, height: 80, bgcolor: "#FF6F61" }} />
+                <Avatar 
+                  sx={{ width: 80, height: 80, bgcolor: "#FF6F61" }}
+                  // Using first letter of firstname and lastname as fallback
+                  children={`${user?.firstname?.[0] || ''}${user?.lastname?.[0] || ''}`}
+                />
                 <Box>
                   <Typography variant="h6" sx={{ fontWeight: "medium", mb: 1 }}>
-                    John Doe
+                    {user?.firstname} {user?.lastname}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    john.doe@example.com
+                    {user?.email}
                   </Typography>
                 </Box>
               </Box>
@@ -93,6 +99,7 @@ function Settings() {
           </motion.div>
         );
 
+      // Rest of the cases remain unchanged
       case "Notifications":
         return (
           <motion.div
@@ -200,15 +207,13 @@ function Settings() {
         animate={{ x: 0 }}
         transition={{ type: "spring", stiffness: 100 }}
         sx={{
-          width: 500, // Increased to 500px for a noticeable change
+          width: 500,
           bgcolor: "background.paper",
           borderRight: 1,
           borderColor: "divider",
           display: "flex",
           flexDirection: "column",
           boxShadow: 1,
-          // Debug styling to ensure width is applied
-          border: "2px solid red", // Temporary border to visualize width
         }}
       >
         <Box

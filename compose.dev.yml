@@ -5,8 +5,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: chatapps
-#      MYSQL_USER: user
-#      MYSQL_PASSWORD: root
     ports:
       - "3306:3306"
     volumes:
@@ -19,9 +17,27 @@ services:
       retries: 10
       start_period: 20s
 
+  cassandra:
+    image: cassandra:latest
+    restart: unless-stopped
+    ports:
+      - "9042:9042"
+    volumes:
+      - ./data/cassandra:/var/lib/cassandra
+    environment:
+      - CASSANDRA_CLUSTER_NAME=chat_cluster
+      - CASSANDRA_NUM_TOKENS=256
+    networks:
+      - spring_network
+    healthcheck:
+      test: [ "CMD-SHELL", "cqlsh -e 'DESCRIBE KEYSPACES;'" ]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+
 volumes:
   mysql_data:
+  cassandra_data:
 
 networks:
   spring_network:
-

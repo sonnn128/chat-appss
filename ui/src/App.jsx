@@ -3,11 +3,12 @@ import React, { useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
 import Main from "./pages/Main";
-import Register from "./pages/Register"; // Viết hoa chữ 'R' cho nhất quán
+import Register from "./pages/Register"; 
 import { ToastContainer } from "react-toastify";
-import Settings from "./pages/Settings"; // Viết hoa chữ 'S' cho đúng tên file
+import Settings from "./pages/Settings"; 
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfile } from "./stores/middlewares/authMiddleware";
+import WebSocketComponent from "./components/WebSocketComponent";
 
 function App() {
   const dispatch = useDispatch();
@@ -37,6 +38,7 @@ function App() {
           path="/settings"
           element={user ? <Settings /> : <Navigate to="/login" />}
         />
+        <Route path="/test" element={<WebSocketComponent />} />
       </Routes>
       <ToastContainer
         position="top-right"
