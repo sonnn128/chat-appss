@@ -1,0 +1,58 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+.env
+.idea/
+.DS_Store
+data
+compose.prod.yml
+# ui - Reactjs
+ui/node_modules
+ui/.env
+ui/.env.production
+ui/build
+ui/package-lock.json
+
+# chat-api - Spring Boot
+chat-api/HELP.md
+chat-api/target/
+chat-api/!.mvn/wrapper/maven-wrapper.jar
+chat-api/!**/src/main/**/target/
+chat-api/!**/src/test/**/target/
+
+### STS ###
+chat-api/.apt_generated
+chat-api/.classpath
+chat-api/.factorypath
+chat-api/.project
+chat-api/.settings
+chat-api/.springBeans
+chat-api/.sts4-cache
+
+### IntelliJ IDEA ###
+chat-api/.idea
+chat-api/*.iws
+chat-api/*.iml
+chat-api/*.ipr
+
+# chat-server Spring Boot
+chat-server/HELP.md
+chat-server/target/
+chat-server/!.mvn/wrapper/maven-wrapper.jar
+chat-server/!**/src/main/**/target/
+chat-server/!**/src/test/**/target/
+
+### STS ###
+chat-server/.apt_generated
+chat-server/.classpath
+chat-server/.factorypath
+chat-server/.project
+chat-server/.settings
+chat-server/.springBeans
+chat-server/.sts4-cache
+
+### IntelliJ IDEA ###
+chat-server/.idea
+chat-server/*.iws
+chat-server/*.iml
+chat-server/*.ipr
+
+storage-server
