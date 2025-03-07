@@ -35,10 +35,16 @@ public class AuthServiceImpl implements AuthService {
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
         );
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getEmail());
-        String jwtToken = jwtService.generateToken((User) userDetails);
+        User user = (User) userDetailsService.loadUserByUsername(loginRequest.getEmail());
+        String jwtToken = jwtService.generateToken(user);
 
         return AuthResponse.builder()
+                .id(user.getId())
+                .firstname(user.getFirstname())
+                .lastname(user.getLastname())
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .role((Role) user.getRoles())
                 .token(jwtToken)
                 .build();
     }
@@ -50,6 +56,9 @@ public class AuthServiceImpl implements AuthService {
         }
 
         User user = User.builder()
+                .firstname(registerRequest.getFirstname())  // ✅ Thêm firstname
+                .lastname(registerRequest.getLastname())    // ✅ Thêm lastname
+                .username(registerRequest.getEmail())       // ✅ Nếu username là email
                 .email(registerRequest.getEmail())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .roles(Set.of(roleRepository.findByName("USER").orElseThrow()))
@@ -59,8 +68,15 @@ public class AuthServiceImpl implements AuthService {
         String jwtToken = jwtService.generateToken(user);
 
         return AuthResponse.builder()
+                .id(user.getId())
+                .firstname(user.getFirstname())
+                .lastname(user.getLastname())
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .role(user.getRoles().iterator().next())
                 .token(jwtToken)
                 .build();
     }
+
 
 }
