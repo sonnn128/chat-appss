@@ -59,3 +59,10 @@ storage-server
 
 ### Note
 *.md
+
+### env
+.env.example
+
+### yml
+*.yml
+*.dev.yml
