@@ -97,11 +97,9 @@ public class AuthServiceImpl implements AuthService {
     public AuthResponse authenticate() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication == null || !authentication.isAuthenticated() || !(authentication.getPrincipal() instanceof User)) {
+        if (authentication == null || !authentication.isAuthenticated() || !(authentication.getPrincipal() instanceof User user)) {
             throw new CommonException("User not authenticated", HttpStatus.UNAUTHORIZED);
         }
-
-        User user = (User) authentication.getPrincipal();
         String jwt = jwtService.generateToken(user, JWT_EXPIRATION_TIME);
 
         return AuthResponse.builder()

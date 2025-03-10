@@ -1,3 +1,4 @@
+// Settings.jsx
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -8,9 +9,6 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  Switch,
-  Divider,
-  Button,
   Box,
 } from "@mui/material";
 import {
@@ -19,14 +17,15 @@ import {
   Notifications,
   Lock,
   Palette,
-  DarkMode,
-  LightMode,
-  ExitToApp,
 } from "@mui/icons-material";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../stores/slices/authSlice";
 import { successToast } from "../utils/toast";
+import Account from "../components/Account";
+import NotificationsSection from "../components/Notifications";
+import Privacy from "../components/Privacy";
+import Appearance from "../components/Appearance";
 
 const sections = [
   { name: "Account", icon: <AccountCircle /> },
@@ -40,7 +39,7 @@ function Settings() {
   const [darkMode, setDarkMode] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector(state => state.auth.user);
+  const user = useSelector((state) => state.auth.user);
   console.log("user setting: ", user);
 
   const handleLogout = () => {
@@ -52,149 +51,13 @@ function Settings() {
   const renderContent = () => {
     switch (selectedSection) {
       case "Account":
-        return (
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Box sx={{ p: 4 }}>
-              <Typography variant="h5" sx={{ fontWeight: "bold", mb: 3 }}>
-                Account Settings
-              </Typography>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 3, mb: 4 }}>
-                <Avatar 
-                  sx={{ width: 80, height: 80, bgcolor: "#FF6F61" }}
-                  // Using first letter of firstname and lastname as fallback
-                  children={`${user?.firstname?.[0] || ''}${user?.lastname?.[0] || ''}`}
-                />
-                <Box>
-                  <Typography variant="h6" sx={{ fontWeight: "medium", mb: 1 }}>
-                    {user?.firstname} {user?.lastname}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {user?.email}
-                  </Typography>
-                </Box>
-              </Box>
-              <Box sx={{ display: "flex", gap: 2 }}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  aria-label="Edit profile"
-                >
-                  Edit Profile
-                </Button>
-                <Button
-                  variant="outlined"
-                  color="error"
-                  startIcon={<ExitToApp />}
-                  onClick={handleLogout}
-                  aria-label="Log out"
-                >
-                  Log Out
-                </Button>
-              </Box>
-            </Box>
-          </motion.div>
-        );
-
-      // Rest of the cases remain unchanged
+        return <Account user={user} handleLogout={handleLogout} />;
       case "Notifications":
-        return (
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Box sx={{ p: 4 }}>
-              <Typography variant="h5" sx={{ fontWeight: "bold", mb: 3 }}>
-                Notifications
-              </Typography>
-              <List disablePadding>
-                <ListItem sx={{ py: 1.5 }}>
-                  <ListItemText
-                    primary="Message Notifications"
-                    secondary="Receive notifications for new messages"
-                  />
-                  <Switch defaultChecked />
-                </ListItem>
-                <Divider />
-                <ListItem sx={{ py: 1.5 }}>
-                  <ListItemText
-                    primary="Sound"
-                    secondary="Play sound for new messages"
-                  />
-                  <Switch defaultChecked />
-                </ListItem>
-              </List>
-            </Box>
-          </motion.div>
-        );
-
+        return <NotificationsSection />;
       case "Privacy":
-        return (
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Box sx={{ p: 4 }}>
-              <Typography variant="h5" sx={{ fontWeight: "bold", mb: 3 }}>
-                Privacy Settings
-              </Typography>
-              <List disablePadding>
-                <ListItem sx={{ py: 1.5 }}>
-                  <ListItemText primary="Who can see my status?" />
-                  <Typography variant="body2" color="primary">
-                    Everyone
-                  </Typography>
-                </ListItem>
-                <Divider />
-                <ListItem sx={{ py: 1.5 }}>
-                  <ListItemText primary="Block Contacts" />
-                  <Button color="primary" variant="text">
-                    Manage
-                  </Button>
-                </ListItem>
-              </List>
-            </Box>
-          </motion.div>
-        );
-
+        return <Privacy />;
       case "Appearance":
-        return (
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Box sx={{ p: 4 }}>
-              <Typography variant="h5" sx={{ fontWeight: "bold", mb: 3 }}>
-                Appearance
-              </Typography>
-              <List disablePadding>
-                <ListItem sx={{ py: 1.5 }}>
-                  <ListItemText primary="Dark Mode" />
-                  <Switch
-                    checked={darkMode}
-                    onChange={() => setDarkMode(!darkMode)}
-                  />
-                </ListItem>
-                <Divider />
-                <ListItem sx={{ py: 1.5 }}>
-                  <ListItemIcon>
-                    {darkMode ? <DarkMode /> : <LightMode />}
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={darkMode ? "Dark Theme" : "Light Theme"}
-                  />
-                </ListItem>
-              </List>
-            </Box>
-          </motion.div>
-        );
-
+        return <Appearance darkMode={darkMode} setDarkMode={setDarkMode} />;
       default:
         return null;
     }

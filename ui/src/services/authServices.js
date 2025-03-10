@@ -1,14 +1,12 @@
 // Import HTTP request helper và các toast messages
+import { getAuthHeaders } from "../utils/authUtils";
 import request from "../utils/httpRequest";
 import { errorToast, successToast } from "../utils/toast";
 
 const AUTH_API = "/auth"; // Thêm biến này để dễ quản lý URL
 
 // Lấy headers chứa token từ localStorage
-const getAuthHeaders = () => {
-  const token = localStorage.getItem("token");
-  return { Authorization: `Bearer ${token}` };
-};
+
 
 // Đăng nhập
 const login = async (credentials) => {
