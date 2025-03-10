@@ -1,5 +1,6 @@
 package com.sonnguyen.chatapi.payload.response;
 
+import com.sonnguyen.chatapi.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,7 +24,7 @@ public class UserResponse {
     private String lastname;
     private Set<String> roles;
 
-    public static UserResponse fromEntity(com.sonnguyen.chatapi.model.User user) {
+    public static UserResponse fromEntity(User user) {
         return UserResponse.builder()
                 .id(user.getId())
                 .email(user.getEmail())

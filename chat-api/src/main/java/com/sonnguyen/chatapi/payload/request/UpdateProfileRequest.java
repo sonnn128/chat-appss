@@ -12,10 +12,4 @@ public class UpdateProfileRequest {
     @NotBlank(message = "Tên không được để trống")
     private String lastname;
 
-    @Email(message = "Email không hợp lệ")
-    private String email;
-
-    @NotBlank(message = "username không được để trống")
-    private String username;
-
 }

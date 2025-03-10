@@ -27,6 +27,8 @@ const updateUserProfile = async (userData) => {
   } catch (error) {
     console.error("Error updating profile:", error);
     errorToast("Failed to update profile");
+    console.log("Error: ", error);
+
     throw error;
   }
 };

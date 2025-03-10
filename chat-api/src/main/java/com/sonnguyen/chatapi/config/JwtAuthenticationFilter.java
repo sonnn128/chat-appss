@@ -48,6 +48,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 );
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
+                logger.info("Successfully authenticated user: " + authToken);
+                logger.info("Loaded User: " + user);
             }
         }
         filterChain.doFilter(request, response);

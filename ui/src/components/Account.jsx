@@ -1,39 +1,35 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Avatar, Typography, Box, Button, TextField } from "@mui/material";
 import { ExitToApp, Save, Cancel } from "@mui/icons-material";
 import userService from "../services/userService";
-import { successToast, errorToast } from "../utils/toast"; // Thông báo
+import { successToast, errorToast } from "../utils/toast";
 
-const Account = ({ user, handleLogout, setUser }) => {
+const Account = ({ user, handleLogout }) => {
+  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [editedUser, setEditedUser] = useState({
     firstname: user?.firstname || "",
     lastname: user?.lastname || "",
-    email: user?.email || "",
-    username: user?.username || "",
   });
 
-  const handleEditClick = () => {
-    setIsEditing(true);
-  };
+  const handleEditClick = () => setIsEditing(true);
 
   const handleCancel = () => {
     setIsEditing(false);
     setEditedUser({
       firstname: user?.firstname || "",
       lastname: user?.lastname || "",
-      email: user?.email || "",
-      username: user?.username || "",
     });
   };
 
   const handleSave = async () => {
     try {
-      const updatedUser = await userService.updateUserProfile(editedUser);
+      await userService.updateUserProfile(editedUser);
       successToast("Profile updated successfully!");
-      setUser(updatedUser); // Cập nhật state user trong parent component
       setIsEditing(false);
+      navigate("/");
     } catch (error) {
       errorToast("Failed to update profile");
     }
@@ -59,8 +55,8 @@ const Account = ({ user, handleLogout, setUser }) => {
         </Typography>
         <Box sx={{ display: "flex", alignItems: "center", gap: 3, mb: 4 }}>
           <Avatar sx={{ width: 80, height: 80, bgcolor: "#FF6F61" }}>
-            {editedUser.firstname?.[0]}
-            {editedUser.lastname?.[0]}
+            {user?.firstname?.[0]}
+            {user?.lastname?.[0]}
           </Avatar>
           <Box sx={{ width: "100%" }}>
             {isEditing ? (
@@ -81,22 +77,6 @@ const Account = ({ user, handleLogout, setUser }) => {
                   onChange={handleChange}
                   margin="normal"
                 />
-                <TextField
-                  fullWidth
-                  label="Email"
-                  name="email"
-                  value={editedUser.email}
-                  onChange={handleChange}
-                  margin="normal"
-                />
-                <TextField
-                  fullWidth
-                  label="Username"
-                  name="username"
-                  value={editedUser.username}
-                  onChange={handleChange}
-                  margin="normal"
-                />
               </>
             ) : (
               <>
@@ -104,21 +84,13 @@ const Account = ({ user, handleLogout, setUser }) => {
                   {user?.firstname} {user?.lastname}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  {user?.email}
+                  <strong>Email:</strong> {user?.email}
                 </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ mt: 0.5 }}
-                >
-                  Username: {user?.username}
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                  <strong>Username:</strong> {user?.username || "N/A"}
                 </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ mt: 0.5 }}
-                >
-                  Roles: {user?.roles?.join(", ") || "No roles assigned"}
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                  <strong>Roles:</strong> {user?.roles?.join(", ") || "No roles assigned"}
                 </Typography>
               </>
             )}
@@ -127,38 +99,19 @@ const Account = ({ user, handleLogout, setUser }) => {
         <Box sx={{ display: "flex", gap: 2 }}>
           {isEditing ? (
             <>
-              <Button
-                variant="contained"
-                color="primary"
-                startIcon={<Save />}
-                onClick={handleSave}
-              >
+              <Button variant="contained" color="primary" startIcon={<Save />} onClick={handleSave}>
                 Save
               </Button>
-              <Button
-                variant="outlined"
-                color="secondary"
-                startIcon={<Cancel />}
-                onClick={handleCancel}
-              >
+              <Button variant="outlined" color="secondary" startIcon={<Cancel />} onClick={handleCancel}>
                 Cancel
               </Button>
             </>
           ) : (
             <>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleEditClick}
-              >
+              <Button variant="contained" color="primary" onClick={handleEditClick}>
                 Edit Profile
               </Button>
-              <Button
-                variant="outlined"
-                color="error"
-                startIcon={<ExitToApp />}
-                onClick={handleLogout}
-              >
+              <Button variant="outlined" color="error" startIcon={<ExitToApp />} onClick={handleLogout}>
                 Log Out
               </Button>
             </>
