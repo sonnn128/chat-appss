@@ -66,3 +66,6 @@ storage-server
 ### yml
 *.yml
 *.dev.yml
+
+### dockx
+*.docx
