@@ -2,6 +2,7 @@ package com.sonnguyen.chatapi.controller;
 
 import com.sonnguyen.chatapi.model.User;
 import com.sonnguyen.chatapi.payload.request.UpdateProfileRequest;
+import com.sonnguyen.chatapi.repository.UserRepository;
 import com.sonnguyen.chatapi.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final UserRepository userRepository;
 
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/profile")
@@ -29,5 +31,11 @@ public class UserController {
     public ResponseEntity<?> searchUsers(@RequestParam String keyword) {
         List<User> users = userService.searchUsers(keyword);
         return ResponseEntity.ok(users);
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getAllUsers() {
+        log.info("Get all users");
+        return ResponseEntity.ok(userRepository.findAll());
     }
 }

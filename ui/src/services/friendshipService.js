@@ -57,8 +57,6 @@ const rejectFriendRequest = async (requestId) => {
 
 // Lấy danh sách bạn bè
 const getFriendList = async (userId) => {
-  console.log("getAuthHeaders(): ", getAuthHeaders());
-
   try {
     const res = await request.get(`${FRIENDSHIP_API}/list?userId=${userId}`, {
       headers: getAuthHeaders(),

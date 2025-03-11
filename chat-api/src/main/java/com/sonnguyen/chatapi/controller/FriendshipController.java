@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/friendships")
@@ -19,39 +20,32 @@ public class FriendshipController {
     private final FriendshipService friendshipService;
 
     @PostMapping("/request")
-    public ResponseEntity<ApiResponse<String>> sendFriendRequest(@RequestParam UUID senderId, @RequestParam UUID receiverId) {
-        String message = friendshipService.sendFriendRequest(senderId, receiverId);
-        return ResponseEntity.ok(new ApiResponse<>(true, message, null));
+    public ResponseEntity<?> sendFriendRequest(@RequestParam UUID senderId, @RequestParam UUID receiverId) {
+        return ResponseEntity.ok(friendshipService.sendFriendRequest(senderId, receiverId));
     }
 
     @GetMapping("/requests")
-    public ResponseEntity<ApiResponse<List<Friendship>>> getPendingRequests(@RequestParam UUID userId) {
-        List<Friendship> pendingRequests = friendshipService.getPendingRequests(userId);
-        return ResponseEntity.ok(new ApiResponse<>(true, "Danh sách lời mời kết bạn", pendingRequests));
+    public ResponseEntity<?> getPendingRequests(@RequestParam UUID userId) {
+        return ResponseEntity.ok(friendshipService.getPendingRequests(userId));
     }
 
     @PostMapping("/accept")
-    public ResponseEntity<ApiResponse<String>> acceptFriendRequest(@RequestParam UUID requestId) {
-        String message = friendshipService.respondToFriendRequest(requestId, true);
-        return ResponseEntity.ok(new ApiResponse<>(true, message, null));
+    public ResponseEntity<?> acceptFriendRequest(@RequestParam UUID requestId) {
+        return ResponseEntity.ok(friendshipService.respondToFriendRequest(requestId, true));
     }
 
     @PostMapping("/reject")
-    public ResponseEntity<ApiResponse<String>> rejectFriendRequest(@RequestParam UUID requestId) {
-        String message = friendshipService.respondToFriendRequest(requestId, false);
-        return ResponseEntity.ok(new ApiResponse<>(true, message, null));
+    public ResponseEntity<?> rejectFriendRequest(@RequestParam UUID requestId) {
+        return ResponseEntity.ok(friendshipService.respondToFriendRequest(requestId, false));
     }
 
     @GetMapping("/list")
-    public ResponseEntity<ApiResponse<List<User>>> getFriends(@RequestParam UUID userId) {
-        log.info("getFriends method called: " + userId);
-        List<User> friends = friendshipService.getFriends(userId);
-        return ResponseEntity.ok(new ApiResponse<>(true, "Danh sách bạn bè", friends));
+    public ResponseEntity<?> getFriends(@RequestParam UUID userId) {
+        return ResponseEntity.ok(friendshipService.getFriends(userId));
     }
 
     @DeleteMapping("/unfriend")
-    public ResponseEntity<ApiResponse<String>> unfriend(@RequestParam UUID userId, @RequestParam UUID friendId) {
-        String message = friendshipService.unfriend(userId, friendId);
-        return ResponseEntity.ok(new ApiResponse<>(true, message, null));
+    public ResponseEntity<?> unfriend(@RequestParam UUID userId, @RequestParam UUID friendId) {
+        return ResponseEntity.ok(friendshipService.unfriend(userId, friendId));
     }
 }

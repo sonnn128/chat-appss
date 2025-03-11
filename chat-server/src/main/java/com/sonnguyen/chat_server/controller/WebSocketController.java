@@ -9,6 +9,6 @@ public class WebSocketController {
     @MessageMapping("/sendMessage")
     @SendTo("/topic/messages")
     public String handleMessage(String message) {
-        return "Server received: " + message;
+        return message;
     }
 }

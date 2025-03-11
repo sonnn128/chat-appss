@@ -8,30 +8,51 @@ import ChatMessages from "./components/ChatMessages";
 import ChatInput from "./components/ChatInput";
 import ProfileModal from "./components/ProfileModal";
 import FriendRequestsModal from "./components/FriendRequestsModal";
+import FriendsModal from "./components/FriendsModal"; // Thêm FriendsModal
 
 function Main() {
   const user = useSelector((state) => state.auth.user);
   const userId = user ? user.id : localStorage.getItem("userId");
   const [search, setSearch] = useState("");
   const [friends, setFriends] = useState([]);
+  const [channels, setChannels] = useState([]);
+  const [pendingRequests, setPendingRequests] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedChannel, setSelectedChannel] = useState(null);
   const [message, setMessage] = useState("");
   const [openProfile, setOpenProfile] = useState(false);
   const [friendRequestSent, setFriendRequestSent] = useState(false);
   const [openFriendRequests, setOpenFriendRequests] = useState(false);
+  const [openFriends, setOpenFriends] = useState(false); // Thêm state cho FriendsModal
 
   // Lấy danh sách bạn bè
   useEffect(() => {
     const fetchFriends = async () => {
       try {
         const data = await friendshipService.getFriendList(userId);
+        console.log("data: ", data);
+        
         setFriends(data);
       } catch (error) {
         console.error("Lỗi khi lấy danh sách bạn bè:", error);
       }
     };
     fetchFriends();
+  }, [userId]);
+
+  // Lấy danh sách yêu cầu kết bạn
+  const fetchPendingRequests = async () => {
+    try {
+      const data = await friendshipService.getPendingRequests(userId);
+      setPendingRequests(data);
+    } catch (error) {
+      console.error("Lỗi khi lấy danh sách yêu cầu kết bạn:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPendingRequests();
   }, [userId]);
 
   // Xử lý tìm kiếm
@@ -52,15 +73,19 @@ function Main() {
     return () => clearTimeout(debounce);
   }, [search]);
 
-  // Chọn người dùng để chat
   const handleSelectUser = (user) => {
     setSelectedUser(user);
+    setSelectedChannel(null);
     setSearch("");
     setSearchResults([]);
     setFriendRequestSent(false);
   };
 
-  // Gửi tin nhắn
+  const handleSelectChannel = (channel) => {
+    setSelectedChannel(channel);
+    setSelectedUser(null);
+  };
+
   const handleSendMessage = () => {
     if (message.trim()) {
       console.log("Tin nhắn gửi:", message);
@@ -68,7 +93,6 @@ function Main() {
     }
   };
 
-  // Thêm bạn
   const handleAddFriend = async () => {
     if (selectedUser) {
       try {
@@ -80,7 +104,6 @@ function Main() {
     }
   };
 
-  // Hủy yêu cầu kết bạn
   const handleCancelRequest = () => {
     if (selectedUser) {
       console.log("Hủy yêu cầu kết bạn với:", getFullName(selectedUser));
@@ -88,29 +111,45 @@ function Main() {
     }
   };
 
-  // Gọi thoại
   const handleCall = () => {
     if (selectedUser) {
       console.log("Gọi thoại tới:", getFullName(selectedUser));
     }
   };
 
-  // Gọi video
   const handleVideoCall = () => {
     if (selectedUser) {
       console.log("Gọi video tới:", getFullName(selectedUser));
     }
   };
 
-  // Mở/đóng profile modal
+  const handleNewChannel = async () => {
+    const channelName = prompt("Enter channel name:");
+    if (channelName && channelName.trim()) {
+      try {
+        const newChannel = await channelService.createChannel(channelName);
+        setChannels((prev) => [...prev, newChannel]);
+        setSelectedChannel(newChannel);
+      } catch (error) {
+        console.error("Lỗi khi tạo channel:", error);
+      }
+    }
+  };
+
   const handleOpenProfile = () => setOpenProfile(true);
   const handleCloseProfile = () => setOpenProfile(false);
 
-  // Mở/đóng friend requests modal
   const handleOpenFriendRequests = () => setOpenFriendRequests(true);
   const handleCloseFriendRequests = () => setOpenFriendRequests(false);
 
-  // Ghép First Name và Last Name
+  const handleOpenFriends = () => setOpenFriends(true); // Hàm mở FriendsModal
+  const handleCloseFriends = () => setOpenFriends(false); // Hàm đóng FriendsModal
+
+  const handleRequestAction = () => {
+    fetchPendingRequests();
+    fetchFriends();
+  };
+
   const getFullName = (user) => {
     return user ? `${user.firstname} ${user.lastname}` : "";
   };
@@ -121,15 +160,21 @@ function Main() {
         search={search}
         setSearch={setSearch}
         friends={friends}
+        channels={channels}
+        pendingRequests={pendingRequests}
         searchResults={searchResults}
         onSelectUser={handleSelectUser}
+        onSelectChannel={handleSelectChannel}
+        onNewChannel={handleNewChannel}
         onOpenFriendRequests={handleOpenFriendRequests}
+        onOpenFriends={handleOpenFriends} // Truyền hàm mở FriendsModal
       />
       <div className="flex-1 flex flex-col bg-white">
-        {selectedUser ? (
+        {selectedUser || selectedChannel ? (
           <>
             <ChatHeader
               selectedUser={selectedUser}
+              selectedChannel={selectedChannel}
               friendRequestSent={friendRequestSent}
               onOpenProfile={handleOpenProfile}
               onAddFriend={handleAddFriend}
@@ -138,7 +183,11 @@ function Main() {
               onVideoCall={handleVideoCall}
               getFullName={getFullName}
             />
-            <ChatMessages selectedUser={selectedUser} getFullName={getFullName} />
+            <ChatMessages
+              selectedUser={selectedUser}
+              selectedChannel={selectedChannel}
+              getFullName={getFullName}
+            />
             <ChatInput
               message={message}
               setMessage={setMessage}
@@ -153,12 +202,19 @@ function Main() {
             <FriendRequestsModal
               open={openFriendRequests}
               onClose={handleCloseFriendRequests}
+              pendingRequests={pendingRequests}
+              onRequestAction={handleRequestAction}
+            />
+            <FriendsModal
+              open={openFriends}
+              onClose={handleCloseFriends}
+              friends={friends}
             />
           </>
         ) : (
           <div className="flex-1 flex items-center justify-center bg-gray-50">
             <p className="text-gray-500 text-lg">
-              Select a chat to start messaging
+              Select a chat or channel to start messaging
             </p>
           </div>
         )}
