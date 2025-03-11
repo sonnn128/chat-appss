@@ -1,4 +1,3 @@
-// Settings.jsx
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -64,41 +63,48 @@ function Settings() {
   };
 
   return (
-    <Box sx={{ display: "flex", height: "100vh", bgcolor: "grey.100" }}>
+    <Box sx={{ display: "flex", height: "100vh", bgcolor: "#f0f2f5" }}>
+      {/* Sidebar trái */}
       <motion.div
         initial={{ x: -500 }}
         animate={{ x: 0 }}
         transition={{ type: "spring", stiffness: 100 }}
         sx={{
-          width: 500,
-          bgcolor: "background.paper",
+          width: 360, // Giảm chiều rộng giống Messenger
+          bgcolor: "white",
           borderRight: 1,
-          borderColor: "divider",
+          borderColor: "grey.200",
           display: "flex",
           flexDirection: "column",
-          boxShadow: 1,
+          boxShadow: "0 1px 2px rgba(0,0,0,0.1)",
         }}
       >
+        {/* Tiêu đề */}
         <Box
           sx={{
-            p: 3,
-            bgcolor: "primary.main",
-            color: "white",
+            p: 2,
+            borderBottom: 1,
+            borderColor: "grey.200",
             display: "flex",
             alignItems: "center",
-            gap: 2,
+            gap: 1,
           }}
         >
           <Link to="/">
-            <IconButton sx={{ color: "white" }} aria-label="Back">
+            <IconButton sx={{ color: "#050505", p: 0.5 }}>
               <ArrowBack />
             </IconButton>
           </Link>
-          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+          <Typography
+            variant="h6"
+            sx={{ fontWeight: "bold", color: "#050505" }}
+          >
             Settings
           </Typography>
         </Box>
-        <List sx={{ flex: 1, py: 2 }}>
+
+        {/* Danh sách tùy chọn */}
+        <List sx={{ flex: 1, py: 0 }}>
           {sections.map((section) => (
             <ListItem
               key={section.name}
@@ -107,17 +113,12 @@ function Settings() {
                 py: 1.5,
                 px: 3,
                 bgcolor:
-                  selectedSection === section.name
-                    ? "primary.light"
-                    : "transparent",
-                color:
-                  selectedSection === section.name
-                    ? "primary.contrastText"
-                    : "inherit",
+                  selectedSection === section.name ? "#e7f3ff" : "transparent",
+                color: "#050505",
                 "&:hover": {
                   bgcolor:
                     selectedSection === section.name
-                      ? "primary.light"
+                      ? "#e7f3ff"
                       : "grey.100",
                 },
                 cursor: "pointer",
@@ -128,25 +129,32 @@ function Settings() {
                 sx={{
                   minWidth: 40,
                   color:
-                    selectedSection === section.name
-                      ? "primary.contrastText"
-                      : "inherit",
+                    selectedSection === section.name ? "#1877f2" : "#65676b",
                 }}
               >
                 {section.icon}
               </ListItemIcon>
-              <ListItemText primary={section.name} />
+              <ListItemText
+                primary={section.name}
+                primaryTypographyProps={{
+                  fontWeight: selectedSection === section.name ? "bold" : "medium",
+                  color: "#050505",
+                }}
+              />
             </ListItem>
           ))}
         </List>
       </motion.div>
 
+      {/* Khu vực nội dung */}
       <Box
         sx={{
           flex: 1,
-          bgcolor: "background.paper",
+          bgcolor: "white",
           overflowY: "auto",
-          p: 2,
+          p: 3,
+          borderLeft: 1,
+          borderColor: "grey.200",
         }}
       >
         {renderContent()}

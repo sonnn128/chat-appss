@@ -16,6 +16,7 @@ public class RegisterRequest {
     private String firstname;
     @NotEmpty(message = "lastname can not empty")
     private String lastname;
+
     @NotEmpty(message = "email can not empty")
     @Email(message = "invalid email")
     private String email;

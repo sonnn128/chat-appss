@@ -16,6 +16,8 @@ const getUserProfile = async () => {
     throw error;
   }
 };
+
+// Cập nhật thông tin người dùng
 const updateUserProfile = async (userData) => {
   try {
     const res = await request.put(`${USER_API}/profile`, userData, {
@@ -27,11 +29,29 @@ const updateUserProfile = async (userData) => {
   } catch (error) {
     console.error("Error updating profile:", error);
     errorToast("Failed to update profile");
-    console.log("Error: ", error);
-
     throw error;
   }
 };
+
+// 🔍 Tìm kiếm người dùng theo keyword (username, email, tên, họ)
+const searchUsers = async (keyword) => {
+  try {
+    const res = await request.get(`${USER_API}/search?keyword=${keyword}`, {
+      headers: getAuthHeaders(),
+    });
+
+    return res.data; // Trả về danh sách người dùng phù hợp
+  } catch (error) {
+    errorToast("Không thể tìm kiếm người dùng!");
+    throw error;
+  }
+};
+
 // Xuất các hàm
-const userService = { getUserProfile, updateUserProfile };
+const userService = {
+  getUserProfile,
+  updateUserProfile,
+  searchUsers, // 🆕 Thêm chức năng tìm kiếm
+};
+
 export default userService;
