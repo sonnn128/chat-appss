@@ -6,7 +6,6 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 public class WebSocketController {
-
     @MessageMapping("/sendMessage")
     @SendTo("/topic/messages")
     public String handleMessage(String message) {

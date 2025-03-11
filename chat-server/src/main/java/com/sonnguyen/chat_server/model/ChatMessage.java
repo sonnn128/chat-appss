@@ -2,6 +2,9 @@ package com.sonnguyen.chat_server.model;
 
 import com.sonnguyen.chat_server.model.enums.MessageType;
 import lombok.*;
+import org.springframework.data.cassandra.core.mapping.PrimaryKey;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter

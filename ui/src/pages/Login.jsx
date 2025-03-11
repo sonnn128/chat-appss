@@ -20,7 +20,7 @@ import {
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import customTheme from "../theme/theme";
-import GoogleIcon from "../theme/GoogleIcon";
+import GoogleIcon from "./GoogleIcon";
 import { loginUser } from "../stores/middlewares/authMiddleware";
 import { successToast } from "../utils/toast";
 

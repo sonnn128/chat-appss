@@ -8,6 +8,7 @@ import org.springframework.data.cassandra.core.cql.keyspace.KeyspaceOption;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
+//  auto generate keyspace if not exist
 
 @Configuration
 public class CassandraConfiguration extends AbstractCassandraConfiguration implements BeanClassLoaderAware {
