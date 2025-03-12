@@ -8,7 +8,6 @@ import { ToastContainer } from "react-toastify";
 import Settings from "./pages/Settings";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfile } from "./stores/middlewares/authMiddleware";
-import ChatComponent from "./components/ChatComponent";
 
 function App() {
   const dispatch = useDispatch();
@@ -38,7 +37,7 @@ function App() {
           path="/settings"
           element={user ? <Settings /> : <Navigate to="/login" />}
         />
-        <Route path="/test" element={<ChatComponent />} />
+        <Route path="/test" element={<WsPublicDemo />} />
       </Routes>
       <ToastContainer
         position="top-right"
@@ -52,5 +51,6 @@ function App() {
     </>
   );
 }
+import WsPublicDemo from "./components/WsDemo/WsPublicDemo";
 
 export default App;
