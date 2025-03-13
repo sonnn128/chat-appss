@@ -11,8 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,23 +42,33 @@ public class FriendshipService {
                 .data("")
                 .build();
     }
-
     public ApiResponse<?> getFriends(UUID userId) {
         User user = getUserById(userId);
-        List<User> friends = friendshipRepository.findByUserAndStatus(user, FriendshipStatus.ACCEPTED)
+        Set<User> uniqueFriends = new HashSet<>();
+
+        uniqueFriends.addAll(friendshipRepository.findByUserAndStatus(user, FriendshipStatus.ACCEPTED)
                 .stream()
                 .map(Friendship::getFriend)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet()));
+
+        uniqueFriends.addAll(friendshipRepository.findByFriendAndStatus(user, FriendshipStatus.ACCEPTED)
+                .stream()
+                .map(Friendship::getUser)
+                .collect(Collectors.toSet()));
+        uniqueFriends.remove(user);
 
         return ApiResponse.<List<User>>builder()
                 .success(true)
                 .message("Danh sách bạn bè")
-                .data(friends)
+                .data(new ArrayList<>(uniqueFriends))
                 .build();
     }
 
+
     public ApiResponse<?> getPendingRequests(UUID userId) {
-        List<Friendship> pendingRequests = friendshipRepository.findByFriendAndStatus(getUserById(userId), FriendshipStatus.PENDING);
+        User targetUser = getUserById(userId);
+
+        List<Friendship> pendingRequests = friendshipRepository.findByFriendAndStatus(targetUser, FriendshipStatus.PENDING);
 
         return ApiResponse.builder()
                 .success(true)
@@ -67,6 +76,7 @@ public class FriendshipService {
                 .data(pendingRequests)
                 .build();
     }
+
 
     public ApiResponse<?> respondToFriendRequest(UUID requestId, boolean accept) {
         Friendship friendship = friendshipRepository.findById(requestId)
@@ -89,15 +99,17 @@ public class FriendshipService {
                     .build();
         }
     }
-
     public ApiResponse<?> unfriend(UUID userId, UUID friendId) {
         User user = getUserById(userId);
         User friend = getUserById(friendId);
 
-        Friendship friendship = (Friendship) friendshipRepository.findByUserAndFriendAndStatus(user, friend, FriendshipStatus.ACCEPTED)
-                .orElseThrow(() -> new CommonException("Không phải bạn bè!", HttpStatus.BAD_REQUEST));
+        List<Friendship> friendships = friendshipRepository.findByUserAndFriendOrFriendAndUser(user, friend);
 
-        friendshipRepository.delete(friendship);
+        if (friendships.isEmpty()) {
+            throw new CommonException("Không phải bạn bè!", HttpStatus.BAD_REQUEST);
+        }
+
+        friendshipRepository.deleteAll(friendships);
 
         return ApiResponse.builder()
                 .success(true)
@@ -105,6 +117,7 @@ public class FriendshipService {
                 .data("")
                 .build();
     }
+
 
     private User getUserById(UUID userId) {
         return userRepository.findById(userId)
