@@ -70,3 +70,4 @@ storage-server
 ### dockx
 *.docx
 *.sql
+.vscode
