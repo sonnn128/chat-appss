@@ -1,4 +1,4 @@
-import { createSlice, current } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import {
   fetchCreateChannel,
   fetchAllChannels,
@@ -9,6 +9,7 @@ const initialState = {
   currentChannel: null,
   loading: false,
   error: null,
+  currentChannelId: null,
 };
 
 const channelSlice = createSlice({
@@ -37,6 +38,7 @@ const channelSlice = createSlice({
     },
     setCurrentChannel: (state, action) => {
       state.currentChannel = action.payload;
+      state.currentChannelId = action.payload.id;
     },
   },
   extraReducers: (builder) => {
@@ -75,6 +77,6 @@ export const {
   selectChannel,
   removeChannel,
   removeCurrentChannel,
-  setCurrentChannel
+  setCurrentChannel,
 } = channelSlice.actions;
 export default channelSlice.reducer;
