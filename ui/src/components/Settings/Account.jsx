@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Avatar, Typography, Box, Button, TextField } from "@mui/material";
 import { ExitToApp, Save, Cancel } from "@mui/icons-material";
-import userService from "../services/userService";
-import { successToast, errorToast } from "../utils/toast";
+import userService from "../../services/userService";
+import { successToast, errorToast } from "../../utils/toast";
 
 const Account = ({ user, handleLogout }) => {
   const navigate = useNavigate();

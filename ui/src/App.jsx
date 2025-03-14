@@ -1,5 +1,7 @@
+import Loading from "./components/Loading";
+import WsPublicDemo from "./components/WsDemo/WsPublicDemo";
 import "react-toastify/dist/ReactToastify.css";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
 import Main from "./pages/Main";
@@ -13,30 +15,30 @@ function App() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const token = useSelector((state) => state.auth.token);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (token) {
-      dispatch(fetchUserProfile());
-    }
+    const fetchProfile = async () => {
+      if (token) {
+        setIsLoading(true);
+        await dispatch(fetchUserProfile()); // Chờ lấy dữ liệu hoàn tất
+        setIsLoading(false);
+      }
+    };
+    fetchProfile();
   }, [token, dispatch]);
-  console.log("user: ", user);
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <>
       <Routes>
         <Route path="/" element={user ? <Main /> : <Navigate to="/login" />} />
-        <Route
-          path="/login"
-          element={!user ? <Login /> : <Navigate to="/" />}
-        />
-        <Route
-          path="/register"
-          element={!user ? <Register /> : <Navigate to="/" />}
-        />
-        <Route
-          path="/settings"
-          element={user ? <Settings /> : <Navigate to="/login" />}
-        />
+        <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
+        <Route path="/register" element={!user ? <Register /> : <Navigate to="/" />} />
+        <Route path="/settings" element={user ? <Settings /> : <Navigate to="/login" />} />
         <Route path="/test" element={<WsPublicDemo />} />
       </Routes>
       <ToastContainer
@@ -51,6 +53,5 @@ function App() {
     </>
   );
 }
-import WsPublicDemo from "./components/WsDemo/WsPublicDemo";
 
 export default App;

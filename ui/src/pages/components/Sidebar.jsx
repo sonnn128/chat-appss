@@ -1,24 +1,65 @@
-import React from "react";
-import { IconButton, TextField, Tooltip, Badge } from "@mui/material";
-import { Settings, GroupAdd, People, Person } from "@mui/icons-material"; // Thêm Person icon
+import React, { useState } from "react";
+import { IconButton, TextField, Tooltip, Badge, Button } from "@mui/material";
+import { Settings, People, Person, Add } from "@mui/icons-material";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import FriendList from "../../components/FriendList";
-import SearchList from "../../components/SearchList";
+import ChannelList from "../../components/ChannelList";
+import { useDispatch, useSelector } from "react-redux";
+import { successToast } from "../../utils/toast";
+import { fetchCreateChannel } from "../../stores/middlewares/channelMiddleware";
+import { stompClient } from "../../utils/ws";
+import { setCurrentFriend } from "../../stores/slices/friendShipSlice";
+import { removeCurrentChannel } from "../../stores/slices/channelSlice";
 
-const Sidebar = ({
-  search,
-  setSearch,
-  friends,
-  channels,
-  pendingRequests,
-  searchResults,
-  onSelectUser,
-  onSelectChannel,
-  onNewChannel,
-  onOpenFriendRequests,
-  onOpenFriends, // Thêm prop để mở modal danh sách bạn bè
-}) => {
+const Sidebar = () => {
+  const dispatch = useDispatch();
+
+  const [search, setSearch] = useState("");
+  const friends = useSelector((state) => state.friendship.friends);
+
+  const userFirstname = useSelector((state) => state.auth.user.firstname);
+  const userId = useSelector((state) => state.auth.user.id);
+
+  const [isAddingChannel, setIsAddingChannel] = useState(false);
+  const [newChannelName, setNewChannelName] = useState("");
+
+  const handleAddChannelClick = () => {
+    setIsAddingChannel(true);
+  };
+
+  const handleChannelSubmit = async (e) => {
+    if (e.key === "Enter" && newChannelName.trim()) {
+      const res = await dispatch(fetchCreateChannel(newChannelName)).unwrap();
+
+      const url = `/channels/${res.id}`;
+      console.log("Url: ", url);
+
+      stompClient.subscribe(`${url}`, (message) => {
+        console.log("Message received: ", message.body);
+      });
+
+      stompClient.publish({
+        destination: `/app/channels/${res.id}`,
+        body: JSON.stringify({
+          key: { channelId: res.id },
+          userId: userId,
+          content: `${userFirstname} created channel!`,
+          type: "NOTICE",
+          timestamp: Date.now(),
+        }),
+      });
+
+      setNewChannelName("");
+      successToast("Add channel successfully");
+    }
+  };
+
+  const onSelectUser = () => {
+    dispatch(setCurrentFriend());
+    dispatch(removeCurrentChannel());
+  };
+
   return (
     <motion.div
       initial={{ x: -300 }}
@@ -29,23 +70,15 @@ const Sidebar = ({
       <div className="p-3 bg-white border-b flex items-center justify-between">
         <h2 className="text-xl font-bold text-gray-800">Messenger</h2>
         <div className="flex gap-2">
-          <Tooltip title="New Channel" arrow>
-            <IconButton sx={{ color: "#65676b" }} onClick={onNewChannel}>
-              <GroupAdd />
-            </IconButton>
-          </Tooltip>
           <Tooltip title="Friend Requests" arrow>
-            <IconButton
-              sx={{ color: "#65676b" }}
-              onClick={onOpenFriendRequests}
-            >
-              <Badge badgeContent={pendingRequests.length} color="primary">
+            <IconButton sx={{ color: "#65676b" }}>
+              <Badge badgeContent={2} color="primary">
                 <People />
               </Badge>
             </IconButton>
           </Tooltip>
           <Tooltip title="Friends" arrow>
-            <IconButton sx={{ color: "#65676b" }} onClick={onOpenFriends}>
+            <IconButton sx={{ color: "#65676b" }}>
               <Badge badgeContent={friends.length} color="primary">
                 <Person />
               </Badge>
@@ -78,27 +111,67 @@ const Sidebar = ({
           }}
         />
       </div>
-
-      {searchResults.length > 0 ? (
-        <SearchList searchResults={searchResults} onSelectUser={onSelectUser} />
-      ) : (
-        <div className="flex-1 overflow-y-auto">
-          <div className="p-3">
+      <div className="flex-1 overflow-y-auto">
+        <div className="p-3">
+          <div className="flex justify-between items-center mb-2">
             <h3 className="text-sm font-semibold text-gray-600">Channels</h3>
-            {channels.map((channel) => (
-              <div
-                key={channel.id}
-                className="p-2 hover:bg-gray-100 cursor-pointer"
-                onClick={() => onSelectChannel(channel)}
-              >
-                {JSON.stringify(channel)}
-                {/* {channel.name} */}
-              </div>
-            ))}
+            <Tooltip
+              title={isAddingChannel ? "Enter channel name" : "Add Channel"}
+              arrow
+            >
+              {isAddingChannel ? (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <TextField
+                    autoFocus
+                    size="small"
+                    placeholder="Channel name"
+                    value={newChannelName}
+                    onChange={(e) => setNewChannelName(e.target.value)}
+                    onKeyPress={handleChannelSubmit}
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        borderRadius: "20px",
+                        backgroundColor: "#f0f2f5",
+                        "& fieldset": { border: "none" },
+                        width: "150px",
+                      },
+                    }}
+                  />
+                </motion.div>
+              ) : (
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button
+                    variant="contained"
+                    size="small"
+                    startIcon={<Add />}
+                    onClick={handleAddChannelClick}
+                    sx={{
+                      borderRadius: "20px",
+                      textTransform: "none",
+                      background:
+                        "linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)",
+                      boxShadow: "0 3px 5px 2px rgba(33, 203, 243, .3)",
+                      color: "white",
+                      padding: "4px 12px",
+                    }}
+                  >
+                    Add
+                  </Button>
+                </motion.div>
+              )}
+            </Tooltip>
           </div>
-          <FriendList friends={friends} onSelectUser={onSelectUser} />
+          <ChannelList />
         </div>
-      )}
+        <FriendList friends={friends} onSelectUser={onSelectUser} />
+      </div>
     </motion.div>
   );
 };

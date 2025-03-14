@@ -1,8 +1,6 @@
-// channelService.js
-// channelService.js
 import { getAuthHeaders } from "../utils/authUtils";
 import request from "../utils/httpRequest";
-import { errorToast, successToast } from "../utils/toast";
+import { errorToast } from "../utils/toast";
 
 const CHANNEL_API = "/channels"; // Base URL cho các API liên quan đến channel
 
@@ -16,25 +14,26 @@ const createChannel = async (name) => {
         headers: getAuthHeaders(), // Thêm headers chứa token
       }
     );
-    successToast("Channel created successfully");
     return res.data; // Trả về dữ liệu channel từ server
   } catch (error) {
-    const errorResponse = error.response?.data || { message: "Failed to create channel" };
+    const errorResponse = error.response?.data || {
+      message: "Failed to create channel",
+    };
     errorToast(errorResponse.message);
     console.error("Error creating channel:", error);
     throw error;
   }
 };
-
-// Lấy danh sách channel (nếu backend hỗ trợ)
 const getChannels = async () => {
   try {
     const res = await request.get(CHANNEL_API, {
       headers: getAuthHeaders(),
     });
-    return res.data; // Giả sử API trả về danh sách channel
+    return res.data;
   } catch (error) {
-    const errorResponse = error.response?.data || { message: "Failed to fetch channels" };
+    const errorResponse = error.response?.data || {
+      message: "Failed to fetch channels",
+    };
     errorToast(errorResponse.message);
     console.error("Error fetching channels:", error);
     throw error;
@@ -49,7 +48,9 @@ const getChannelById = async (channelId) => {
     });
     return res.data; // Giả sử API trả về thông tin channel
   } catch (error) {
-    const errorResponse = error.response?.data || { message: "Failed to fetch channel" };
+    const errorResponse = error.response?.data || {
+      message: "Failed to fetch channel",
+    };
     errorToast(errorResponse.message);
     console.error("Error fetching channel:", error);
     throw error;

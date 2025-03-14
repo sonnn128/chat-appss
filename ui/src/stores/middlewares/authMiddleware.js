@@ -3,7 +3,6 @@ import authServices from '../../services/authServices';
 
 export const fetchUserProfile = createAsyncThunk('fetchUserProfile', async () => {
     const userProfile = await authServices.getUserProfile();
-    console.log('userProfile: ', userProfile);
     return userProfile;
 });
 

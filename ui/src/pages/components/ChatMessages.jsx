@@ -14,7 +14,6 @@ const ChatMessages = ({ selectedUser, getFullName }) => {
         <div className="flex items-start">
           <Avatar
             sx={{ width: 32, height: 32 }}
-            src={selectedUser.avatar || ""}
             alt={getFullName(selectedUser)}
           />
           <div className="ml-2 bg-gray-200 p-2 rounded-lg max-w-xs">

@@ -94,7 +94,7 @@ function Login() {
 
             <Box component="form" onSubmit={handleSubmit} noValidate>
               <Grid container spacing={2}>
-                <Grid item xs={12}>
+                <Grid xs={12}>
                   <FormControl required>
                     <FormLabel>Email</FormLabel>
                     <Input 
@@ -105,7 +105,7 @@ function Login() {
                     />
                   </FormControl>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid xs={12}>
                   <FormControl required>
                     <FormLabel>Password</FormLabel>
                     <Input

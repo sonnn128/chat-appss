@@ -14,5 +14,5 @@ const stompClient = new Client({
 stompClient.onStompError = (error) => {
   errorToast(JSON.stringify(error));
 };
-
+stompClient.activate();
 export { stompClient };

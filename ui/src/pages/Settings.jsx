@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  Avatar,
   IconButton,
   Typography,
   List,
@@ -21,10 +20,10 @@ import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../stores/slices/authSlice";
 import { successToast } from "../utils/toast";
-import Account from "../components/Account";
-import NotificationsSection from "../components/Notifications";
-import Privacy from "../components/Privacy";
-import Appearance from "../components/Appearance";
+import Account from "../components/Settings/Account";
+import NotificationsSection from "../components/Settings/Notifications";
+import Privacy from "../components/Settings/Privacy";
+import Appearance from "../components/Settings/Appearance";
 
 const sections = [
   { name: "Account", icon: <AccountCircle /> },
@@ -39,7 +38,6 @@ function Settings() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
-  console.log("user setting: ", user);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -117,9 +115,7 @@ function Settings() {
                 color: "#050505",
                 "&:hover": {
                   bgcolor:
-                    selectedSection === section.name
-                      ? "#e7f3ff"
-                      : "grey.100",
+                    selectedSection === section.name ? "#e7f3ff" : "grey.100",
                 },
                 cursor: "pointer",
                 transition: "background-color 0.2s",
@@ -137,7 +133,8 @@ function Settings() {
               <ListItemText
                 primary={section.name}
                 primaryTypographyProps={{
-                  fontWeight: selectedSection === section.name ? "bold" : "medium",
+                  fontWeight:
+                    selectedSection === section.name ? "bold" : "medium",
                   color: "#050505",
                 }}
               />

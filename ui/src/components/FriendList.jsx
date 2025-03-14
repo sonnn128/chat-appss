@@ -1,16 +1,24 @@
 import React from "react";
 import { Avatar } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentFriend } from "../stores/slices/friendShipSlice";
+import { removeCurrentChannel } from "../stores/slices/channelSlice";
 
-function FriendList({ friends = [], onSelectUser }) {
-  const user = useSelector(state => state.auth.user);
-  console.log("friends: ", friends);
+function FriendList() {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
+  const friends = useSelector((state) => state.friendship.friends);
+  const currentF = useSelector((state) => state.friendship.currentFriend);
 
+  const onSelectUser = (friend) => {
+    dispatch(setCurrentFriend(friend));
+    dispatch(removeCurrentChannel());
+  };
   return (
     <div className="flex-1 overflow-y-auto px-2">
       {friends
-        .filter(friend => user.email !== friend.email) 
-        .map(friend => (
+        .filter((friend) => user.email !== friend.email)
+        .map((friend) => (
           <div
             key={friend.id}
             className="flex items-center p-3 rounded-lg cursor-pointer hover:bg-gray-100"

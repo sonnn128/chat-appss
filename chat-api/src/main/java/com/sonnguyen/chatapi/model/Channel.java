@@ -4,30 +4,21 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import jakarta.validation.constraints.NotEmpty;
 
-@Entity
-@Table(name = "channels")
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Entity
+@Table(name = "channels")
 public class Channel {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+    @NotEmpty
     private String name;
-
-    @ManyToOne
-    @JoinColumn(name = "owner_id")
-    private User owner;
-
-    private LocalDateTime createdAt;
-
-    public Channel(String name, User owner) {
-        this.name = name;
-        this.owner = owner;
-        this.createdAt = LocalDateTime.now();
-    }
+    private LocalDateTime dateCreated;
 }

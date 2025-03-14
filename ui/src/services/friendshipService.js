@@ -61,7 +61,6 @@ const getFriendList = async (userId) => {
     const res = await request.get(`${FRIENDSHIP_API}/list?userId=${userId}`, {
       headers: getAuthHeaders(),
     });
-    console.log("Res: ", res);
     return res.data.data;
   } catch (error) {
     errorToast(
