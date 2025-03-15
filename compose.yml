@@ -1,0 +1,70 @@
+services:
+  mysql:
+    image: mysql:latest
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: chatapps
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    networks:
+      - spring_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 5s
+      retries: 10
+      start_period: 20s
+
+  cassandra:
+    image: cassandra:latest
+    restart: unless-stopped
+    ports:
+      - "9042:9042"
+    volumes:
+      - ./data/cassandra:/var/lib/cassandra
+    environment:
+      - CASSANDRA_CLUSTER_NAME=chat_cluster
+      - CASSANDRA_NUM_TOKENS=256
+    networks:
+      - spring_network
+    healthcheck:
+      test: ["CMD-SHELL", "cqlsh -e 'DESCRIBE KEYSPACES;'"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+  chat-server:
+    build: ./chat-server
+    env_file:
+      - ./.env
+    depends_on:
+      cassandra:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    networks:
+      - spring_network
+  chat-api:
+    build: ./chat-api
+    env_file:
+      - ./.env
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "8081:8081"
+    networks:
+      - spring_network
+  chat-ui:
+    build: ./ui
+    ports:
+      - "5173:5173"
+    env_file:
+      - ./.env
+volumes:
+  mysql_data:
+  cassandra_data:
+
+networks:
+  spring_network:

@@ -64,8 +64,6 @@ storage-server
 .env.example
 
 ### yml
-*.yml
-*.dev.yml
 
 ### dockx
 *.docx
