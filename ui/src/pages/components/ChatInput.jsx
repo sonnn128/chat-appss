@@ -20,7 +20,6 @@ const ChatInput = ({ message, setMessage }) => {
       };
 
       stompClient.subscribe(`/channels/${currentChannelId}`, (message) => {
-        console.log("Message received: ", JSON.parse(message.body));
         dipsatch(setMessages(JSON.parse(message.body)));
       });
 

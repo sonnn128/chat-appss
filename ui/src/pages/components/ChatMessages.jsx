@@ -10,12 +10,19 @@ const ChatMessages = ({ selectedUser, getFullName }) => {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     if (currentChannelId) {
       dispatch(fetchAllMessageOfChannel(currentChannelId));
     }
   }, [currentChannelId]);
-  console.log("messages: ", messages);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  // Lọc tin nhắn trùng lặp nếu cần
+  const uniqueMessages = Array.from(
+    new Map(messages.map((msg) => [msg.key.messageId, msg])).values()
+  );
 
   return (
     <div className="flex-1 p-4 overflow-y-auto bg-gray-50">
@@ -29,10 +36,13 @@ const ChatMessages = ({ selectedUser, getFullName }) => {
             <p className="text-sm text-gray-900">Xin chào! Bạn khỏe không?</p>
           </div>
         </div>
-        {messages.length > 0
-          ? messages.map((message) =>
+        {uniqueMessages.length > 0
+          ? uniqueMessages.map((message) =>
               message.type === "NOTICE" ? (
-                <div className="flex justify-center my-2">
+                <div
+                  key={message.key.messageId} // Thêm key ở đây
+                  className="flex justify-center my-2"
+                >
                   <div className="bg-gray-200 text-gray-700 text-xs px-3 py-1 rounded-full">
                     {message.content}
                   </div>

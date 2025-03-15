@@ -19,11 +19,6 @@ public class ChannelController {
 
     private final ChannelService channelService;
     private final ChannelRepository channelRepository;
-//    testing
-//    @GetMapping
-//    public List<Channel> getAllChannels() {
-//        return channelRepository.findAll();
-//    }
 
     @PostMapping
     public ChannelResponse createChannel(@RequestBody Channel channel) {

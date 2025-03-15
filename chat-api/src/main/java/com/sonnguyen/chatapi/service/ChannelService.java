@@ -9,4 +9,5 @@ import java.util.UUID;
 public interface ChannelService {
     ChannelResponse createChannel(Channel channel);
     List<ChannelResponse> getAllChannelsOfUser(UUID userId);
+
 }
