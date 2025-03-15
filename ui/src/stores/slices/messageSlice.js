@@ -9,7 +9,11 @@ const initialState = {
 const messageSlice = createSlice({
   name: "message",
   initialState,
-  reducers: {},
+  reducers: {
+    setMessages: (state, action) => {
+      state.messages.push(action.payload);
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllMessageOfChannel.pending, (state) => {
@@ -25,6 +29,6 @@ const messageSlice = createSlice({
   },
 });
 
-export const { logout } = messageSlice.actions;
+export const { setMessages } = messageSlice.actions;
 
 export default messageSlice.reducer;

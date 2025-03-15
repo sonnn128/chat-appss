@@ -4,10 +4,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchAllChannels } from "../stores/middlewares/channelMiddleware";
 import { setCurrentChannel } from "../stores/slices/channelSlice";
 import { removeCurrentFriend } from "../stores/slices/friendShipSlice";
+import { fetchAllMessageOfChannel } from "../stores/middlewares/messageMiddleware";
 
 function ChannelList() {
   const dispatch = useDispatch();
-  const channels = useSelector((state) => state.channel.channels);
+  const { channels, currentChannelId } = useSelector((state) => state.channel);
 
   const onSelectChannel = (channel) => {
     dispatch(setCurrentChannel(channel));
@@ -15,8 +16,10 @@ function ChannelList() {
   };
 
   useEffect(() => {
-    dispatch(fetchAllChannels());
-  }, []);
+    if (currentChannelId) {
+      dispatch(fetchAllMessageOfChannel(currentChannelId));
+    }
+  }, [currentChannelId]);
 
   return (
     <div className="flex-1 overflow-y-auto px-2">

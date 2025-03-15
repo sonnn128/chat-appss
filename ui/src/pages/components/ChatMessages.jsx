@@ -14,7 +14,7 @@ const ChatMessages = ({ selectedUser, getFullName }) => {
     if (currentChannelId) {
       dispatch(fetchAllMessageOfChannel(currentChannelId));
     }
-  }, []);
+  }, [currentChannelId]);
   console.log("messages: ", messages);
 
   return (
