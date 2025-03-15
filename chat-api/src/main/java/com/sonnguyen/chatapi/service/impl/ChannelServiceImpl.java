@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -74,6 +75,21 @@ public class ChannelServiceImpl implements ChannelService {
     }
 
     @Override
+    public ChannelResponse getChannelById(UUID channelId) {
+        return null;
+    }
+
+    @Override
+    public ChannelResponse updateChannel(UUID channelId, Channel channel) {
+        return null;
+    }
+
+    @Override
+    public boolean deleteChannel(UUID channelId) {
+        return false;
+    }
+
+    @Override
     public List<MemberResponse> getAllMembersOfChannel(UUID channelId) {
         List<MemberResponse> result = new ArrayList<>();
         List<Membership> membershipList = membershipRepository.findAllMembersByChannelId(channelId).orElseThrow();
@@ -89,6 +105,62 @@ public class ChannelServiceImpl implements ChannelService {
                     .build());
         }
         return result;
+    }
+
+    @Override
+    public Membership requestJoinChannel(UUID channelId) {
+        return null;
+    }
+
+    @Override
+    public Membership acceptJoinChannel(UUID channelId, UUID memberId) {
+        return null;
+    }
+
+    @Override
+    public Membership declineJoinChannel(UUID channelId, UUID memberId) {
+        return null;
+    }
+
+    @Override
+    public List<Membership> getAllRequestsOfChannel(UUID channelId){
+        return membershipRepository.findAllRequestsByChannelId(channelId).orElseThrow();
+    }
+
+    @Override
+    public List<Membership> addMemberToChannel(UUID channelId, List<UUID> userIds) {
+        User admin = SecurityUtils.getCurrentUser();
+        Channel channel = channelRepository.findById(channelId).orElseThrow();
+        Membership adminMembership = membershipRepository.findById(new MembershipKey(channelId, admin.getId())).orElseThrow();
+        if(adminMembership.getRole() != Role.ADMIN){
+            return null;
+        }
+        return userIds.stream().map(userId -> {
+            User user = userRepository.findById(userId).orElseThrow();
+            return membershipRepository.save(Membership.builder()
+                    .id(new MembershipKey(channelId, userId))
+                    .channel(channel)
+                    .user(user)
+                    .joiningDate(LocalDateTime.now())
+                    .role(Role.USER)
+                    .status(Status.ACCEPTED)
+                    .build());
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean leaveChannel(UUID userId, UUID channelId) {
+        return false;
+    }
+
+    @Override
+    public Membership setMemberRole(UUID userId, UUID channelId, Role role) {
+        return null;
+    }
+
+    @Override
+    public boolean deleteMember(UUID userId, UUID channelId) {
+        return false;
     }
 
 }
