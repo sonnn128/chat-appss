@@ -1,4 +1,4 @@
-package com.sonnguyen.chatapi.model;
+package com.sonnguyen.chatapi.model.membership;
 
 public enum Status {
     PENDING,

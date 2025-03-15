@@ -57,11 +57,31 @@ const getChannelById = async (channelId) => {
   }
 };
 
+
+const getAllMembers = async (channelId) => {
+  try {
+    const res = await request.get(`${CHANNEL_API}/${channelId}/members`, {
+      headers: getAuthHeaders(),
+    });
+    return res.data; // Giả sử API trả về thông tin channel
+  } catch (error) {
+    const errorResponse = error.response?.data || {
+      message: "Failed to fetch channel",
+    };
+    errorToast(errorResponse.message);
+    console.error("Error fetching channel:", error);
+    throw error;
+  }
+};
+
+
+
 // Xuất các hàm để sử dụng
 const channelService = {
   createChannel,
   getChannels,
   getChannelById,
+  getAllMembers
 };
 
 export default channelService;

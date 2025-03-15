@@ -1,7 +1,7 @@
 package com.sonnguyen.chatapi.repository;
 
-import com.sonnguyen.chatapi.model.Membership;
-import com.sonnguyen.chatapi.model.MembershipKey;
+import com.sonnguyen.chatapi.model.membership.Membership;
+import com.sonnguyen.chatapi.model.membership.MembershipKey;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

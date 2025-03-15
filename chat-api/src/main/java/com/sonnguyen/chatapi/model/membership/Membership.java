@@ -1,5 +1,6 @@
-package com.sonnguyen.chatapi.model;
+package com.sonnguyen.chatapi.model.membership;
 
+import com.sonnguyen.chatapi.model.*;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,7 +31,7 @@ public class Membership {
     @Enumerated(EnumType.STRING)
     private Status status;
     @Enumerated(EnumType.STRING)
-    private RoleOfChannel role;
+    private Role role;
     private LocalDateTime joiningDate;
 }
 
