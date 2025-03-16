@@ -1,5 +1,6 @@
 package com.sonnguyen.chatapi.payload.response;
 
+import com.sonnguyen.chatapi.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +19,6 @@ public class AuthResponse {
     private String lastname;
     private String email;
     private String username;
-    private Set<String> roles; // Danh sách roles thay vì chỉ 1 role
+    private Role role;
     private String token;
 }

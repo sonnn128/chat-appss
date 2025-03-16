@@ -1,44 +1,28 @@
-import axios from 'axios';
+import axios from "axios";
+import { errorToast } from "./toast";
 
-// Create an axios instance
+// Tạo một instance Axios với cấu hình chung
 const httpRequest = axios.create({
-    baseURL: import.meta.env.VITE_REACT_APP_BASE_URL,
-    timeout: 5000,
+  baseURL: import.meta.env.VITE_REACT_APP_BASE_URL,
+  timeout: 5000,
 });
 
-// GET method
-export const get = async (path, options = {}) => {
-    const response = await httpRequest.get(path, options);
+// Hàm xử lý lỗi chung
+const handleRequest = async (callback) => {
+  try {
+    const response = await callback();
     return response.data;
+  } catch (error) {
+    console.error("API Error:", error);
+    errorToast(error.response?.data?.message || "Something went wrong");
+    throw error;
+  }
 };
 
-// POST method:
-export const post = async (path, data, options = {}) => {
-    const response = await httpRequest.post(path, data, options);
-    return response.data;
-};
-
-// PUT method
-export const put = async (path, data, options = {}) => {
-    const response = await httpRequest.put(path, data, options);
-    return response.data;
-};
-
-// DELETE method
-export const del = async (path, options = {}) => {
-    const response = await httpRequest.delete(path, options);
-    return response.data;
-};
+// Định nghĩa các phương thức HTTP chung
+export const get = (url, options = {}) => handleRequest(() => httpRequest.get(url, options));
+export const post = (url, data, options = {}) => handleRequest(() => httpRequest.post(url, data, options));
+export const put = (url, data, options = {}) => handleRequest(() => httpRequest.put(url, data, options));
+export const del = (url, options = {}) => handleRequest(() => httpRequest.delete(url, options));
 
 export default httpRequest;
-
-// --option--
-
-// httpRequest.get(api, {
-//     headers: {
-//         Authorization: 'Bearer your_token_here',
-//         'Content-Type': 'application/json',
-//     },
-//     params: { page: 1, limit: 10 },
-//     timeout: 5000,
-// });

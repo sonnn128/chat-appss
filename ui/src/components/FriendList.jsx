@@ -1,46 +1,93 @@
 import React from "react";
-import { Avatar } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
+import {
+  List,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
+  Avatar,
+  Typography,
+} from "@mui/material";
+import { motion } from "framer-motion";
+import { useDispatch } from "react-redux";
 import { setCurrentFriend } from "../stores/slices/friendShipSlice";
-import { removeCurrentChannel } from "../stores/slices/channelSlice";
 
-function FriendList() {
+const FriendList = ({ friends }) => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.auth.user);
-  const friends = useSelector((state) => state.friendship.friends);
-  const currentF = useSelector((state) => state.friendship.currentFriend);
 
-  const onSelectUser = (friend) => {
-    dispatch(setCurrentFriend(friend));
-    dispatch(removeCurrentChannel());
+  // Handle selecting a friend
+  const handleSelectFriend = (friend) => {
+    dispatch(setCurrentFriend(friend)); // Set the selected friend in Redux store
   };
+
   return (
-    <div className="flex-1 overflow-y-auto px-2">
-      {friends
-        .filter((friend) => user.email !== friend.email)
-        .map((friend) => (
-          <div
-            key={friend.id}
-            className="flex items-center p-3 rounded-lg cursor-pointer hover:bg-gray-100"
-            onClick={() => onSelectUser(friend)}
-          >
-            <Avatar
-              sx={{ width: 40, height: 40 }}
-              src={friend.avatar || ""}
-              alt={friend.username}
-            />
-            <div className="ml-3 flex-1 min-w-0">
-              <p className="font-semibold text-gray-900 truncate">
-                {friend.firstname + " " + friend.lastname}
-              </p>
-              <p className="text-sm text-gray-600 truncate">
-                {friend.lastMessage || "No messages yet"}
-              </p>
-            </div>
-          </div>
-        ))}
+    <div className="mt-4">
+      <Typography
+        variant="subtitle2"
+        className="text-sm font-semibold text-gray-600 mb-2"
+      >
+        Friends
+      </Typography>
+      {friends && friends.length > 0 ? (
+        <List dense>
+          {friends.map((friend) => {
+            return (
+              <motion.div
+                key={friend.id}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <ListItem
+                  button="true"
+                  onClick={() => handleSelectFriend(friend)}
+                  sx={{
+                    borderRadius: "10px",
+                    "&:hover": { backgroundColor: "#f0f2f5" },
+                    padding: "8px 12px",
+                  }}
+                >
+                  <ListItemAvatar>
+                    <Avatar
+                      sx={{ width: 36, height: 36 }}
+                      alt={`${friend.firstname} ${friend.lastname}`}
+                    >
+                      {friend.firstname.charAt(0)}
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={
+                      <Typography
+                        variant="body1"
+                        sx={{ fontWeight: 500, color: "#050505" }}
+                      >
+                        {`${friend.firstname} ${friend.lastname}`}
+                      </Typography>
+                    }
+                    secondary={
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                        }}
+                      >
+                        {friend.email}
+                      </Typography>
+                    }
+                  />
+                </ListItem>
+              </motion.div>
+            );
+          })}
+        </List>
+      ) : (
+        <Typography variant="body2" color="text.secondary">
+          No friends to display
+        </Typography>
+      )}
     </div>
   );
-}
+};
 
 export default FriendList;

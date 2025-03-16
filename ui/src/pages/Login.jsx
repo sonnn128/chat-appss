@@ -22,22 +22,17 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import customTheme from "../theme/theme";
 import GoogleIcon from "./GoogleIcon";
 import { loginUser } from "../stores/middlewares/authMiddleware";
-import { successToast } from "../utils/toast";
+import { errorToast, successToast } from "../utils/toast";
 
-// Component for user login
 function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  
-  // State management
-  const [error, setError] = useState(null); // null is more explicit than undefined
-  const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // Added loading state
 
-  // Handle form submission
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setError(null); // Clear previous errors
     setIsLoading(true);
 
     try {
@@ -54,36 +49,41 @@ function Login() {
       }
 
       // Dispatch login action and handle response
-      const result = await dispatch(loginUser({
-        email: formData.email,
-        password: formData.password
-      })).unwrap();
+      const result = await dispatch(
+        loginUser({
+          email: formData.email,
+          password: formData.password,
+        })
+      ).unwrap();
 
       // On successful login, navigate to dashboard or home
       if (result) {
         navigate("/"); // Adjust this route as needed
-        successToast("Log in successfully")
+        successToast("Log in successfully");
       }
     } catch (err) {
-      setError(err.message || "Login failed. Please try again.");
-    } finally {
-      setIsLoading(false);
+      errorToast(err.message || "Login failed. Please try again.");
     }
   };
 
   return (
     <CssVarsProvider theme={customTheme}>
       <Container maxWidth="xs">
-        <Box 
-          sx={{ 
-            marginTop: 8, 
-            display: "flex", 
-            flexDirection: "column", 
-            alignItems: "center" 
+        <Box
+          sx={{
+            marginTop: 8,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
           <Card variant="outlined" sx={{ width: "100%" }}>
-            <Box display="flex" flexDirection="column" alignItems="center" sx={{ mb: 2 }}>
+            <Box
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+              sx={{ mb: 2 }}
+            >
               <Typography component="h1" fontSize="xl2" fontWeight="lg">
                 Log in to your account
               </Typography>
@@ -97,9 +97,9 @@ function Login() {
                 <Grid xs={12}>
                   <FormControl required>
                     <FormLabel>Email</FormLabel>
-                    <Input 
-                      type="email" 
-                      name="email" 
+                    <Input
+                      type="email"
+                      name="email"
                       disabled={isLoading}
                       autoComplete="email"
                     />
@@ -114,7 +114,7 @@ function Login() {
                       disabled={isLoading}
                       autoComplete="current-password"
                       endDecorator={
-                        <IconButton 
+                        <IconButton
                           onClick={() => setShowPassword(!showPassword)}
                           disabled={isLoading}
                         >
@@ -125,34 +125,23 @@ function Login() {
                   </FormControl>
                 </Grid>
               </Grid>
-
-              {error && (
-                <Typography 
-                  level="body2" 
-                  color="danger" 
-                  sx={{ mt: 2, textAlign: "center" }}
-                >
-                  {error}
-                </Typography>
-              )}
-
-              <Box 
-                sx={{ 
-                  display: "flex", 
-                  justifyContent: "space-between", 
-                  alignItems: "center", 
-                  my: 2 
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  my: 2,
                 }}
               >
-                <Checkbox 
-                  size="sm" 
-                  label="Remember for 30 days" 
-                  name="rememberMe" 
+                <Checkbox
+                  size="sm"
+                  label="Remember for 30 days"
+                  name="rememberMe"
                   disabled={isLoading}
                 />
-                <Link 
-                  fontSize="sm" 
-                  href="/forgot-password" 
+                <Link
+                  fontSize="sm"
+                  href="/forgot-password"
                   fontWeight="lg"
                   disabled={isLoading}
                 >
@@ -188,9 +177,9 @@ function Login() {
               </Button>
 
               <Box display="flex" justifyContent="center">
-                <Link 
-                  fontSize="sm" 
-                  href="/register" 
+                <Link
+                  fontSize="sm"
+                  href="/register"
                   fontWeight="lg"
                   disabled={isLoading}
                 >

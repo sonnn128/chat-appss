@@ -1,7 +1,7 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import messageServices from '../../services/messageService';
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import messageServices from "../../services/messageService";
 
-export const fetchAllMessageOfChannel = createAsyncThunk('fetchAllMessageOfChannel', async (id) => {
-    const messages = await messageServices.getAllMessagesOfChannel(id);
-    return messages;
-});
+export const fetchAllMessageOfChannel = createAsyncThunk(
+  "fetchAllMessageOfChannel",
+  async (channelId) => await messageServices.getAllMessagesOfChannel(channelId)
+);

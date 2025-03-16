@@ -1,16 +1,13 @@
 package com.sonnguyen.chatapi.payload.response;
 
+import com.sonnguyen.chatapi.model.Role;
 import com.sonnguyen.chatapi.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
-
-import com.sonnguyen.chatapi.model.Role;
 
 @Data
 @AllArgsConstructor
@@ -22,7 +19,7 @@ public class UserResponse {
     private String username;
     private String firstname;
     private String lastname;
-    private Set<String> roles;
+    private Role role;
 
     public static UserResponse fromEntity(User user) {
         return UserResponse.builder()
@@ -31,7 +28,7 @@ public class UserResponse {
                 .username(user.getUsername())
                 .firstname(user.getFirstname())
                 .lastname(user.getLastname())
-                .roles(user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()))
+                .role(user.getRole())
                 .build();
     }
 }

@@ -1,3 +1,4 @@
+import "./assets/css/App.css"
 import Loading from "./components/Loading";
 import WsPublicDemo from "./components/WsDemo/WsPublicDemo";
 import "react-toastify/dist/ReactToastify.css";
@@ -21,7 +22,7 @@ function App() {
     const fetchProfile = async () => {
       if (token) {
         setIsLoading(true);
-        await dispatch(fetchUserProfile()); // Chờ lấy dữ liệu hoàn tất
+        await dispatch(fetchUserProfile()); 
         setIsLoading(false);
       }
     };

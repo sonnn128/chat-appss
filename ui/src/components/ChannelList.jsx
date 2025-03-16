@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { Avatar, AvatarGroup } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllChannels } from "../stores/middlewares/channelMiddleware";
 import { setCurrentChannel } from "../stores/slices/channelSlice";
 import { removeCurrentFriend } from "../stores/slices/friendShipSlice";
 import { fetchAllMessageOfChannel } from "../stores/middlewares/messageMiddleware";

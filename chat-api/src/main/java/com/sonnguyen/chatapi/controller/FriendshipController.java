@@ -1,12 +1,12 @@
 package com.sonnguyen.chatapi.controller;
 
-import com.sonnguyen.chatapi.model.Friendship;
 import com.sonnguyen.chatapi.model.User;
+import com.sonnguyen.chatapi.model.friendship.Friendship;
 import com.sonnguyen.chatapi.payload.response.ApiResponse;
-import com.sonnguyen.chatapi.service.FriendshipService;
+import com.sonnguyen.chatapi.repository.FriendshipRepository;
+import com.sonnguyen.chatapi.service.FriendShipService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,35 +17,60 @@ import java.util.UUID;
 @RequestMapping("/api/v1/friendships")
 @RequiredArgsConstructor
 public class FriendshipController {
-    private final FriendshipService friendshipService;
+    private final FriendShipService friendShipService;
+    private final FriendshipRepository friendshipRepository;
 
-    @PostMapping("/request")
-    public ResponseEntity<?> sendFriendRequest(@RequestParam UUID senderId, @RequestParam UUID receiverId) {
-        return ResponseEntity.ok(friendshipService.sendFriendRequest(senderId, receiverId));
+    @PostMapping("/request/{friendId}")
+    public ApiResponse<Friendship> sendFriendRequest(
+            @PathVariable UUID friendId) {
+        log.info("friendID: " + friendId);
+        Friendship friendship = friendShipService.sendFriendRequest(friendId);
+        return ApiResponse.<Friendship>builder()
+                .success(true)
+                .message("Friend request sent successfully")
+                .data(friendship)
+                .build();
     }
 
-    @GetMapping("/requests")
-    public ResponseEntity<?> getPendingRequests(@RequestParam UUID userId) {
-        return ResponseEntity.ok(friendshipService.getPendingRequests(userId));
+    @PutMapping("/accept/{friendId}")
+    public ApiResponse<Friendship> acceptFriendRequest(
+            @PathVariable UUID friendId) {
+        log.info("friendIDputmapping: " + friendId);
+        Friendship friendship = friendShipService.acceptFriendRequest(friendId);
+        return ApiResponse.<Friendship>builder()
+                .success(true)
+                .message("Friend request accepted")
+                .data(friendship)
+                .build();
     }
 
-    @PostMapping("/accept")
-    public ResponseEntity<?> acceptFriendRequest(@RequestParam UUID requestId) {
-        return ResponseEntity.ok(friendshipService.respondToFriendRequest(requestId, true));
+    @DeleteMapping("/{friendId}")
+    public ApiResponse<Void> removeFriend(
+            @PathVariable UUID friendId) {
+        friendShipService.removeFriend( friendId);
+        return ApiResponse.<Void>builder()
+                .success(true)
+                .message("Friend removed successfully")
+                .build();
     }
 
-    @PostMapping("/reject")
-    public ResponseEntity<?> rejectFriendRequest(@RequestParam UUID requestId) {
-        return ResponseEntity.ok(friendshipService.respondToFriendRequest(requestId, false));
+    @GetMapping
+    public ApiResponse<List<User>> getFriends(){
+        List<User> friends = friendShipService.getFriends();
+        return ApiResponse.<List<User>>builder()
+                .success(true)
+                .message("Friends retrieved successfully")
+                .data(friends)
+                .build();
     }
 
-    @GetMapping("/list")
-    public ResponseEntity<?> getFriends(@RequestParam UUID userId) {
-        return ResponseEntity.ok(friendshipService.getFriends(userId));
-    }
-
-    @DeleteMapping("/unfriend")
-    public ResponseEntity<?> unfriend(@RequestParam UUID userId, @RequestParam UUID friendId) {
-        return ResponseEntity.ok(friendshipService.unfriend(userId, friendId));
+    @GetMapping("/pending")
+    public ApiResponse<List<Friendship>> getPendingRequests(){
+        List<Friendship> pendingRequests = friendShipService.getPendingRequests();
+        return ApiResponse.<List<Friendship>>builder()
+                .success(true)
+                .message("Pending requests retrieved successfully")
+                .data(pendingRequests)
+                .build();
     }
 }

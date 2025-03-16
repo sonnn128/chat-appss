@@ -17,6 +17,4 @@ public class LoginRequest {
     private String email;
     @NotEmpty(message = "password can not empty")
     private String password;
-    private boolean rememberMe;
-
 }

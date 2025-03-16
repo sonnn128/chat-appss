@@ -1,4 +1,4 @@
-import React, { useState } from "react"; // Không cần useEffect nữa
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import customTheme from "../theme/theme";
 import { CssVarsProvider } from "@mui/joy/styles";
@@ -18,22 +18,18 @@ import {
 import GoogleIcon from "./GoogleIcon";
 import { useDispatch } from "react-redux";
 import { registerUser } from "../stores/middlewares/authMiddleware";
-import { successToast } from "../utils/toast";
+import { errorToast, successToast } from "../utils/toast";
 
 function Register() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [error, setError] = useState();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    console.log("handleSubmit: ", handleSubmit);
-    
     const formElements = event.currentTarget.elements;
     const formData = {
       email: formElements.email.value,
-      password: formElements.password.value,  
+      password: formElements.password.value,
       lastname: formElements.lastname.value,
       firstname: formElements.firstname.value,
     };
@@ -43,7 +39,7 @@ function Register() {
       successToast("Register success");
       navigate("/login");
     } catch (err) {
-      setError(err.message || "Registration failed");
+      errorToast(err.message || "Register failed");
     }
   };
 
@@ -98,13 +94,6 @@ function Register() {
                   </FormControl>
                 </Grid>
               </Grid>
-              {error && (
-                <Typography
-                  variant="plain"
-                  color="danger"
-                  sx={{ mt: 3 }}
-                >{`*${error}`}</Typography>
-              )}
               <Button fullWidth type="submit" variant="solid" sx={{ my: 3 }}>
                 Register
               </Button>

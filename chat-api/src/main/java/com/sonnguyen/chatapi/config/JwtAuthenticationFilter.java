@@ -37,6 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
         jwt = authHeader.substring(7);
+        logger.info("jwt: " + jwt);
         userEmail = jwtService.extractUsername(jwt);
         if(userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null){
             User user = (User) this.userDetailsService.loadUserByUsername(userEmail);
@@ -46,7 +47,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         null,
                         user.getAuthorities()
                 );
+                logger.info("authenticated authToken: " + authToken);
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
                 SecurityContextHolder.getContext().setAuthentication(authToken);
                 logger.info("Successfully authenticated user: " + authToken);
                 logger.info("Loaded User: " + user);

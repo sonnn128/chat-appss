@@ -1,8 +1,9 @@
 package com.sonnguyen.chatapi.repository;
 
-import com.sonnguyen.chatapi.model.Friendship;
+import com.sonnguyen.chatapi.model.friendship.Friendship;
 import com.sonnguyen.chatapi.model.User;
-import com.sonnguyen.chatapi.model.enums.FriendshipStatus;
+import com.sonnguyen.chatapi.model.friendship.FriendshipKey;
+import com.sonnguyen.chatapi.model.friendship.FriendshipStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,13 +14,14 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface FriendshipRepository extends JpaRepository<Friendship, UUID> {
-    List<Friendship> findByUserAndStatus(User user, FriendshipStatus status);
-    List<Friendship> findByFriendAndStatus(User friend, FriendshipStatus status);
-    boolean existsByUserAndFriend(User user, User friend);
-
-    Optional<Object> findByUserAndFriendAndStatus(User user, User friend, FriendshipStatus status);
-    @Query("SELECT f FROM Friendship f WHERE (f.user = :user AND f.friend = :friend) OR (f.user = :friend AND f.friend = :user)")
-    List<Friendship> findByUserAndFriendOrFriendAndUser(@Param("user") User user, @Param("friend") User friend);
+public interface FriendshipRepository extends JpaRepository<Friendship, FriendshipKey> {
+    List<Friendship> findByUserIdAndStatus(UUID userId, FriendshipStatus status);
+    Optional<Friendship> findByUserIdAndFriendId(UUID userId, UUID friendId);
+    boolean existsByUserIdAndFriendId(UUID userId, UUID friendId);
+    List<Friendship> findByFriendIdAndStatus(UUID friendId, FriendshipStatus status);
+    @Query("SELECT f.user FROM Friendship f WHERE f.friend.id = :userId AND f.status = 'ACCEPTED' " +
+            "UNION " +
+            "SELECT f.friend FROM Friendship f WHERE f.user.id = :userId AND f.status = 'ACCEPTED'")
+    List<User> findFriends(@Param("userId") UUID userId);
 
 }

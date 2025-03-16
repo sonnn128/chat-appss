@@ -1,47 +1,39 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import friendshipService from "../../services/friendshipService";
+import userService from "../../services/userService";
 
-// Lấy danh sách bạn bè
-const fetchFriendList = createAsyncThunk(
+export const fetchFriendList = createAsyncThunk(
   "friendship/fetchFriendList",
-  async (userId, { rejectWithValue }) => {
-    try {
-      const data = await friendshipService.getFriendList(userId);
-      return data;
-    } catch (error) {
-      return rejectWithValue(error.response?.data || "Error fetching friends");
-    }
-  }
+  async () => await friendshipService.getFriendList()
 );
 
-// Lấy danh sách yêu cầu kết bạn
-const fetchPendingRequests = createAsyncThunk(
+export const fetchFriendSuggestions = createAsyncThunk(
+  "friendship/fetchFriendSuggestions",
+  async () => await userService.getFriendSuggestions()
+);
+
+export const fetchPendingRequests = createAsyncThunk(
   "friendship/fetchPendingRequests",
-  async (userId, { rejectWithValue }) => {
-    try {
-      const data = await friendshipService.getPendingRequests(userId);
-      return data;
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data || "Error fetching pending requests"
-      );
-    }
+  async () => {
+    const res = await friendshipService.getPendingRequests();
+    return res.data;
   }
 );
 
-// Gửi yêu cầu kết bạn
-const sendFriendRequest = createAsyncThunk(
+export const sendFriendRequest = createAsyncThunk(
   "friendship/sendFriendRequest",
-  async ({ userId, friendId }, { rejectWithValue }) => {
-    try {
-      await friendshipService.sendFriendRequest(userId, friendId);
-      return { userId, friendId }; // Trả về dữ liệu nếu cần
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data || "Error sending friend request"
-      );
-    }
-  }
+  async (friendId) => await friendshipService.sendFriendRequest(friendId)
 );
 
-export { fetchFriendList, fetchPendingRequests, sendFriendRequest };
+export const acceptFriendRequest = createAsyncThunk(
+  "friendship/acceptFriendRequest",
+  async (friendId) => await friendshipService.acceptFriendRequest(friendId)
+);
+
+export const removeFriend = createAsyncThunk(
+  "friendship/removeFriend",
+  async (friendId) => {
+    await friendshipService.unfriendUser(friendId);
+    return { friendId };
+  }
+);

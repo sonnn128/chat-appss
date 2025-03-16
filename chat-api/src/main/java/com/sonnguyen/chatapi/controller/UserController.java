@@ -4,6 +4,7 @@ import com.sonnguyen.chatapi.model.User;
 import com.sonnguyen.chatapi.payload.request.UpdateProfileRequest;
 import com.sonnguyen.chatapi.repository.UserRepository;
 import com.sonnguyen.chatapi.service.UserService;
+import com.sonnguyen.chatapi.utils.SecurityUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -35,7 +37,14 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<?> getAllUsers() {
-        log.info("Get all users");
-        return ResponseEntity.ok(userRepository.findAll());
+        User user = SecurityUtils.getCurrentUser();
+        List<User> allUsers = userRepository.findAll();
+        log.info("getAllUsers: " + allUsers);
+        log.info("userID: " + user.getId());
+        List<User> filteredUsers = allUsers.stream()
+                .filter(u -> !u.getId().equals(user.getId()))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(filteredUsers);
     }
 }

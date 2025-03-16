@@ -3,7 +3,7 @@ services:
   mysql:
     image: mysql:latest
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD-my_secret}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD-root}
       MYSQL_DATABASE: chatapps
     ports:
       - "3306:3306"
