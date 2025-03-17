@@ -1,18 +1,39 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from "react"; // Thêm useEffect
+import { useSelector, useDispatch } from "react-redux"; // Thêm useDispatch
 import ChatHeader from "./ChatHeader";
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
 import { motion } from "framer-motion";
 import { infoToast } from "../../utils/toast";
 import FriendListAddMember from "../../components/FriendListAddMember";
+import { stompClient } from "../../utils/ws"; // Thêm stompClient
+import { setMessages } from "../../stores/slices/messageSlice"; // Thêm setMessages
 
 function ChatSection() {
+  const dispatch = useDispatch(); // Thêm dispatch
   const selectedChannel = useSelector((state) => state.channel.currentChannel);
+  const { currentChannelId } = useSelector((state) => state.channel); // Thêm currentChannelId
   const { currentFriend } = useSelector((state) => state.friendship);
 
   const [message, setMessage] = useState("");
   const [isMemberSidebarOpen, setIsMemberSidebarOpen] = useState(false);
+
+  // Thiết lập subscription khi kênh thay đổi
+  useEffect(() => {
+    if (currentChannelId && stompClient) {
+      const subscription = stompClient.subscribe(
+        `/channels/${currentChannelId}`,
+        (message) => {
+          dispatch(setMessages(JSON.parse(message.body)));
+        }
+      );
+
+      // Hủy subscription khi component unmount hoặc kênh thay đổi
+      return () => {
+        subscription.unsubscribe();
+      };
+    }
+  }, [currentChannelId, dispatch]);
 
   const handleAddFriend = async () => {
     infoToast("handleAddFriend");
@@ -30,12 +51,10 @@ function ChatSection() {
     return user ? `${user.firstname} ${user.lastname}` : "";
   };
 
-  // Hàm xử lý khi click vào "Add Member"
   const onAddMember = () => {
-    setIsMemberSidebarOpen(true); // Mở sidebar bên phải
+    setIsMemberSidebarOpen(true);
   };
 
-  // Hàm đóng sidebar
   const closeMemberSidebar = () => {
     setIsMemberSidebarOpen(false);
   };
@@ -48,7 +67,7 @@ function ChatSection() {
             onOpenProfile={handleOpenProfile}
             onAddFriend={handleAddFriend}
             onCancelRequest={handleCancelRequest}
-            onAddMember={onAddMember} // Truyền hàm onAddMember
+            onAddMember={onAddMember}
           />
           <ChatMessages
             currentFriend={currentFriend}
@@ -65,12 +84,11 @@ function ChatSection() {
         </div>
       )}
 
-      {/* Right sightbar */}
       {isMemberSidebarOpen && (
         <motion.div
-          initial={{ x: 300 }} // Bắt đầu từ bên phải
-          animate={{ x: 0 }} // Di chuyển vào vị trí
-          exit={{ x: 300 }} // Thoát ra bên phải
+          initial={{ x: 300 }}
+          animate={{ x: 0 }}
+          exit={{ x: 300 }}
           transition={{ type: "spring", stiffness: 100 }}
           className="absolute top-0 right-0 w-80 h-full bg-white border-l shadow-lg flex flex-col p-4"
         >

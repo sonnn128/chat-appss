@@ -5,60 +5,75 @@ import { fetchAllMessageOfChannel } from "../../stores/middlewares/messageMiddle
 
 const ChatMessages = ({ selectedUser, getFullName }) => {
   const dispatch = useDispatch();
-  const { currentChannelId } = useSelector((state) => state.channel);
-  const { messages } = useSelector((state) => state.message);
   const messagesEndRef = useRef(null);
 
+  // Selectors
+  const currentFriend = useSelector((state) => state.friendship.currentFriend);
+
+  if (currentFriend) {
+    console.log("currentFriend: ", currentFriend);
+  }
+
+  const { currentChannelId } = useSelector((state) => state.channel);
+  const { messages } = useSelector((state) => state.message);
+  const currentUserId = useSelector((state) => state.auth.user.id);
+
+  // Fetch messages when channel changes
   useEffect(() => {
     if (currentChannelId) {
       dispatch(fetchAllMessageOfChannel(currentChannelId));
     }
-  }, [currentChannelId]);
+  }, [currentChannelId, dispatch]);
 
+  // Scroll to bottom when messages update
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Lọc tin nhắn trùng lặp nếu cần
-  const uniqueMessages = Array.from(
-    new Map(messages.map((msg) => [msg.key.messageId, msg])).values()
+  // Message rendering components
+  const NoticeMessage = ({ message }) => (
+    <div className="flex justify-center my-2">
+      <div className="bg-gray-200 text-gray-700 text-xs px-3 py-1 rounded-full">
+        {message.content}
+      </div>
+    </div>
   );
 
+  const UserMessage = ({ message, isCurrentUser }) => (
+    <div className={`flex items-start ${isCurrentUser ? "justify-end" : ""}`}>
+      {!isCurrentUser && (
+        <Avatar
+          sx={{ width: 32, height: 32 }}
+          alt={getFullName(selectedUser)}
+        />
+      )}
+      <div
+        className={`${
+          isCurrentUser
+            ? "bg-blue-500 text-white"
+            : "bg-gray-200 text-gray-900 ml-2"
+        } p-2 rounded-lg max-w-xs`}
+      >
+        <p className="text-sm">{message.content}</p>
+      </div>
+    </div>
+  );
   return (
     <div className="flex-1 p-4 overflow-y-auto bg-gray-50">
       <div className="flex flex-col gap-2">
-        <div className="flex items-start">
-          <Avatar
-            sx={{ width: 32, height: 32 }}
-            alt={getFullName(selectedUser)}
-          />
-          <div className="ml-2 bg-gray-200 p-2 rounded-lg max-w-xs">
-            <p className="text-sm text-gray-900">Xin chào! Bạn khỏe không?</p>
-          </div>
-        </div>
-        {uniqueMessages.length > 0
-          ? uniqueMessages.map((message) =>
-              message.type === "NOTICE" ? (
-                <div
-                  key={message.key.messageId} // Thêm key ở đây
-                  className="flex justify-center my-2"
-                >
-                  <div className="bg-gray-200 text-gray-700 text-xs px-3 py-1 rounded-full">
-                    {message.content}
-                  </div>
-                </div>
+        {messages.length &&
+          messages.map((message) => (
+            <React.Fragment key={message.key.messageId}>
+              {message.type === "NOTICE" ? (
+                <NoticeMessage message={message} />
               ) : (
-                <div
-                  key={message.key.messageId}
-                  className="flex items-start justify-end"
-                >
-                  <div className="bg-blue-500 p-2 rounded-lg max-w-xs text-white">
-                    <p className="text-sm">{message.content}</p>
-                  </div>
-                </div>
-              )
-            )
-          : ""}
+                <UserMessage
+                  message={message}
+                  isCurrentUser={message.userId === currentUserId}
+                />
+              )}
+            </React.Fragment>
+          ))}
       </div>
       <div ref={messagesEndRef} />
     </div>

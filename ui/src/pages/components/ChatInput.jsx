@@ -3,12 +3,11 @@ import { TextField, IconButton, Tooltip } from "@mui/material";
 import { Send } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { stompClient } from "../../utils/ws";
-import { setMessages } from "../../stores/slices/messageSlice";
 
 const ChatInput = ({ message, setMessage }) => {
   const { currentChannelId } = useSelector((state) => state.channel);
   const { user } = useSelector((state) => state.auth);
-  const dipsatch = useDispatch();
+
   const handleSendMessage = () => {
     if (message.trim()) {
       const messageSend = {
@@ -19,10 +18,7 @@ const ChatInput = ({ message, setMessage }) => {
         timestamp: Date.now(),
       };
 
-      stompClient.subscribe(`/channels/${currentChannelId}`, (message) => {
-        dipsatch(setMessages(JSON.parse(message.body)));
-      });
-
+      // Chỉ gửi tin nhắn, không subscribe ở đây
       stompClient.publish({
         destination: `/app/channels/${currentChannelId}`,
         body: JSON.stringify(messageSend),
@@ -30,6 +26,7 @@ const ChatInput = ({ message, setMessage }) => {
       setMessage("");
     }
   };
+
   return (
     <div className="p-3 border-t flex items-center bg-white">
       <TextField

@@ -69,3 +69,4 @@ storage-server
 *.docx
 *.sql
 .vscode
+docker-compose.yml

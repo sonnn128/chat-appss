@@ -60,7 +60,7 @@ public class RestControlExceptionHandle {
     public ResponseEntity<ApiResponse<?>> resolveAccessDeniedException(Exception e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
                 ApiResponse.builder()
-                        .message("Access denied")
+                        .message(e.getMessage())
                         .success(false)
                         .build()
         );

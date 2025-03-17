@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Box,
   Typography,
@@ -9,10 +9,13 @@ import {
   Button,
   Stack,
 } from "@mui/joy";
+import { addMembersToChannel } from "../stores/middlewares/channelMiddleware";
 
 function FriendListAddMember() {
+  const dispatch = useDispatch();
+
   const friends = useSelector((state) => state.friendship.friends);
-  const currentChannelId = useSelector(state => state.channel.currentChannel.id)
+  const currentChannelId = useSelector(state => state.channel.currentChannelId)
   const [selectedFriends, setSelectedFriends] = useState([]);
 
   const toggleFriendSelection = (friendId) => {
@@ -30,8 +33,11 @@ function FriendListAddMember() {
   };
 
   const handleSend = () => {
-    console.log("Selected friends:", selectedFriends);
-    console.log("currentChannel:", currentChannelId);
+    const data = {
+      userIds: selectedFriends,
+      channelId: currentChannelId
+    }
+    dispatch(addMembersToChannel(data))
     
   };
 

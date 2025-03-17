@@ -4,11 +4,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCurrentChannel } from "../stores/slices/channelSlice";
 import { removeCurrentFriend } from "../stores/slices/friendShipSlice";
 import { fetchAllMessageOfChannel } from "../stores/middlewares/messageMiddleware";
+import { fetchAllMembersOfChannel } from "../stores/middlewares/channelMiddleware";
 
 function ChannelList() {
   const dispatch = useDispatch();
-  const { channels, currentChannelId } = useSelector((state) => state.channel);
+  const { channels, currentChannelId, joinedChannels } = useSelector((state) => state.channel);
 
+  console.log("currentChannelId: ", currentChannelId);
+  console.log("joinedChannels: ", joinedChannels);
+  
   const onSelectChannel = (channel) => {
     dispatch(setCurrentChannel(channel));
     dispatch(removeCurrentFriend());
@@ -17,6 +21,7 @@ function ChannelList() {
   useEffect(() => {
     if (currentChannelId) {
       dispatch(fetchAllMessageOfChannel(currentChannelId));
+      dispatch(fetchAllMembersOfChannel(currentChannelId))
     }
   }, [currentChannelId]);
 

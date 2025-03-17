@@ -8,23 +8,26 @@ const createChannel = async (name) =>
   post(CHANNEL_API, { name }, { headers: getAuthHeaders() });
 
 // Lấy danh sách tất cả các channel
-const getChannels = async () =>
-  get(CHANNEL_API, { headers: getAuthHeaders() });
+const getChannels = async () => get(CHANNEL_API, { headers: getAuthHeaders() });
 
 // Lấy thông tin chi tiết của một channel
 const getChannelById = async (channelId) =>
   get(`${CHANNEL_API}/${channelId}`, { headers: getAuthHeaders() });
 
 // Lấy danh sách tất cả thành viên của một channel
-const getAllMembers = async (channelId) =>
+const getAllMembersOfChannel = async (channelId) =>
   get(`${CHANNEL_API}/${channelId}/members`, { headers: getAuthHeaders() });
+
+const addMembersToChannel = async (channelId, userIds) =>
+  post(`${CHANNEL_API}/${channelId}/members`, {userIds}, { headers: getAuthHeaders() });
 
 // Xuất các hàm để sử dụng
 const channelService = {
   createChannel,
   getChannels,
   getChannelById,
-  getAllMembers,
+  getAllMembersOfChannel,
+  addMembersToChannel
 };
 
 export default channelService;

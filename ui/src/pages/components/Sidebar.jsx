@@ -244,7 +244,7 @@ const Sidebar = () => {
             </Tooltip>
           </div>
           <ChannelList />
-          <FriendList friends={friends}/>
+          {/* <FriendList friends={friends}/> */}
         </div>
       </div>
 

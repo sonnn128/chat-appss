@@ -2,6 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   fetchCreateChannel,
   fetchAllChannels,
+  fetchAllMembersOfChannel,
+  addMembersToChannel,
 } from "../middlewares/channelMiddleware";
 
 const initialState = {
@@ -10,6 +12,7 @@ const initialState = {
   loading: false,
   error: null,
   currentChannelId: null,
+  joinedChannels: [],
 };
 
 const channelSlice = createSlice({
@@ -65,6 +68,34 @@ const channelSlice = createSlice({
         state.channels = action.payload; // Cập nhật danh sách channels
       })
       .addCase(fetchAllChannels.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // fetchAllMembersOfChannel
+      .addCase(fetchAllMembersOfChannel.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchAllMembersOfChannel.fulfilled, (state, action) => {
+        state.loading = false;
+        state.joinedChannels = action.payload;
+      })
+      .addCase(fetchAllMembersOfChannel.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // addMembersToChannel
+      .addCase(addMembersToChannel.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addMembersToChannel.fulfilled, (state, action) => {
+        state.loading = false;
+        state.joinedChannels = action.payload;
+      })
+      .addCase(addMembersToChannel.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
