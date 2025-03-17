@@ -45,8 +45,10 @@ const Sidebar = () => {
     (state) => state.friendship
   );
   const handleAcceptRequest = (request) => {
-    dispatch(acceptFriendRequest(request.friend.id));
+    dispatch(acceptFriendRequest(request.id));
   };
+  console.log("friendSuggestions: ", friendSuggestions);
+  
 
   const [search, setSearch] = useState("");
 
@@ -244,7 +246,7 @@ const Sidebar = () => {
             </Tooltip>
           </div>
           <ChannelList />
-          {/* <FriendList friends={friends}/> */}
+          <FriendList friends={friends}/>
         </div>
       </div>
 
@@ -323,7 +325,7 @@ const Sidebar = () => {
             {pendingRequests.length > 0 ? (
               pendingRequests.map((request) => (
                 <ListItem
-                  key={request.friend.id}
+                  key={request.id}
                   sx={{
                     display: "flex",
                     alignItems: "center",
@@ -341,7 +343,7 @@ const Sidebar = () => {
                           maxWidth: "200px",
                         }}
                       >
-                        {`${request.friend.firstname} ${request.friend.lastname}`}
+                        {`${request.firstname} ${request.lastname}`}
                       </Typography>
                     }
                     secondary={
@@ -355,7 +357,7 @@ const Sidebar = () => {
                           maxWidth: "200px",
                         }}
                       >
-                        {request.friend.email}
+                        {request.email}
                       </Typography>
                     }
                   />

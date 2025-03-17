@@ -29,6 +29,8 @@ const friendshipService = {
   },
   // Lấy danh sách yêu cầu kết bạn đang chờ xử lý
   getPendingRequests: async () => get(`${FRIENDSHIP_API}/pending`, { headers: getAuthHeaders() }),
+  
+  getFriendSuggestions: async () => get(`${FRIENDSHIP_API}/suggestions`, { headers: getAuthHeaders() }),
 };
 
 export default friendshipService;

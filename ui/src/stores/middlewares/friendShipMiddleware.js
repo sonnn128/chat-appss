@@ -1,6 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import friendshipService from "../../services/friendshipService";
-import userService from "../../services/userService";
 
 export const fetchFriendList = createAsyncThunk(
   "friendship/fetchFriendList",
@@ -9,7 +8,10 @@ export const fetchFriendList = createAsyncThunk(
 
 export const fetchFriendSuggestions = createAsyncThunk(
   "friendship/fetchFriendSuggestions",
-  async () => await userService.getFriendSuggestions()
+  async () => {
+    const res = await friendshipService.getFriendSuggestions();
+    return res.data;
+  }
 );
 
 export const fetchPendingRequests = createAsyncThunk(

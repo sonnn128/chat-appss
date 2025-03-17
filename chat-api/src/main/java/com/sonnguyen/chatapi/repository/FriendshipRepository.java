@@ -23,5 +23,9 @@ public interface FriendshipRepository extends JpaRepository<Friendship, Friendsh
             "UNION " +
             "SELECT f.friend FROM Friendship f WHERE f.user.id = :userId AND f.status = 'ACCEPTED'")
     List<User> findFriends(@Param("userId") UUID userId);
+    List<Friendship> findByUserId(UUID userId);
+
+    @Query("SELECT f FROM Friendship f WHERE f.friend.id = :userId AND f.status = 'PENDING'")
+    List<Friendship> findPendingRequestsForUser(@Param("userId") UUID userId);
 
 }

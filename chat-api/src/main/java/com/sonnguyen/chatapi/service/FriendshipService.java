@@ -15,5 +15,8 @@ public interface FriendshipService {
 
     List<User> getFriends();
 
-    List<Friendship> getPendingRequests();
+    List<User> getPendingRequests();
+    List<User> getFriendSuggestions();
+
+
 }

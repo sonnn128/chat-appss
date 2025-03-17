@@ -20,6 +20,17 @@ public class FriendshipController {
     private final FriendshipService friendshipService;
     private final FriendshipRepository friendshipRepository;
 
+    @GetMapping("/suggestions")
+    public ApiResponse<List<User>> getFriendSuggestions() {
+        List<User> suggestions = friendshipService.getFriendSuggestions();
+        return ApiResponse.<List<User>>builder()
+                .success(true)
+                .message("Friend suggestions retrieved successfully")
+                .data(suggestions)
+                .build();
+    }
+
+
     @PostMapping("/request/{friendId}")
     public ApiResponse<Friendship> sendFriendRequest(
             @PathVariable UUID friendId) {
@@ -31,6 +42,7 @@ public class FriendshipController {
                 .data(friendship)
                 .build();
     }
+
 
     @PutMapping("/accept/{friendId}")
     public ApiResponse<Friendship> acceptFriendRequest(
@@ -65,9 +77,9 @@ public class FriendshipController {
     }
 
     @GetMapping("/pending")
-    public ApiResponse<List<Friendship>> getPendingRequests(){
-        List<Friendship> pendingRequests = friendshipService.getPendingRequests();
-        return ApiResponse.<List<Friendship>>builder()
+    public ApiResponse<List<User>> getPendingRequests(){
+        List<User> pendingRequests = friendshipService.getPendingRequests();
+        return ApiResponse.<List<User>>builder()
                 .success(true)
                 .message("Pending requests retrieved successfully")
                 .data(pendingRequests)
