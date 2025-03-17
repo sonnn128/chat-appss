@@ -15,7 +15,6 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString(exclude = "friends")
 public class User implements UserDetails {
 
     @Id
@@ -28,9 +27,6 @@ public class User implements UserDetails {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(unique = true, nullable = false)
-    private String username;
-
     @Column(nullable = false)
     private String password;
 
@@ -41,6 +37,12 @@ public class User implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
     }
+
+    @Override
+    public String getUsername() {
+        return "";
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;

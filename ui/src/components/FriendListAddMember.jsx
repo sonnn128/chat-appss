@@ -12,6 +12,7 @@ import {
 
 function FriendListAddMember() {
   const friends = useSelector((state) => state.friendship.friends);
+  const currentChannelId = useSelector(state => state.channel.currentChannel.id)
   const [selectedFriends, setSelectedFriends] = useState([]);
 
   const toggleFriendSelection = (friendId) => {
@@ -30,6 +31,8 @@ function FriendListAddMember() {
 
   const handleSend = () => {
     console.log("Selected friends:", selectedFriends);
+    console.log("currentChannel:", currentChannelId);
+    
   };
 
   return (

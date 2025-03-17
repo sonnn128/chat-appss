@@ -129,7 +129,7 @@ public class ChannelServiceImpl implements ChannelService {
 
     @Override
     public List<Membership> addMemberToChannel(UUID channelId, List<UUID> userIds) {
-        User admin = SecurityUtils.getCurrentUser();
+        User admin = (User) SecurityUtils.getCurrentUser();
         Channel channel = channelRepository.findById(channelId).orElseThrow();
         Membership adminMembership = membershipRepository.findById(new MembershipKey(channelId, admin.getId())).orElseThrow();
         if(adminMembership.getRole() != Role.ADMIN){

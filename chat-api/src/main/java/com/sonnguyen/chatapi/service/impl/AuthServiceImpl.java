@@ -86,7 +86,6 @@ public class AuthServiceImpl implements AuthService {
                 .firstname(user.getFirstname())
                 .lastname(user.getLastname())
                 .email(user.getEmail())
-                .username(user.getUsername())
                 .role(user.getRole())
                 .token(token)
                 .build();

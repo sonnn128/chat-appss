@@ -4,7 +4,7 @@ import com.sonnguyen.chatapi.model.User;
 import com.sonnguyen.chatapi.model.friendship.Friendship;
 import com.sonnguyen.chatapi.payload.response.ApiResponse;
 import com.sonnguyen.chatapi.repository.FriendshipRepository;
-import com.sonnguyen.chatapi.service.FriendShipService;
+import com.sonnguyen.chatapi.service.FriendshipService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -17,14 +17,14 @@ import java.util.UUID;
 @RequestMapping("/api/v1/friendships")
 @RequiredArgsConstructor
 public class FriendshipController {
-    private final FriendShipService friendShipService;
+    private final FriendshipService friendshipService;
     private final FriendshipRepository friendshipRepository;
 
     @PostMapping("/request/{friendId}")
     public ApiResponse<Friendship> sendFriendRequest(
             @PathVariable UUID friendId) {
         log.info("friendID: " + friendId);
-        Friendship friendship = friendShipService.sendFriendRequest(friendId);
+        Friendship friendship = friendshipService.sendFriendRequest(friendId);
         return ApiResponse.<Friendship>builder()
                 .success(true)
                 .message("Friend request sent successfully")
@@ -36,7 +36,7 @@ public class FriendshipController {
     public ApiResponse<Friendship> acceptFriendRequest(
             @PathVariable UUID friendId) {
         log.info("friendIDputmapping: " + friendId);
-        Friendship friendship = friendShipService.acceptFriendRequest(friendId);
+        Friendship friendship = friendshipService.acceptFriendRequest(friendId);
         return ApiResponse.<Friendship>builder()
                 .success(true)
                 .message("Friend request accepted")
@@ -47,7 +47,7 @@ public class FriendshipController {
     @DeleteMapping("/{friendId}")
     public ApiResponse<Void> removeFriend(
             @PathVariable UUID friendId) {
-        friendShipService.removeFriend( friendId);
+        friendshipService.removeFriend( friendId);
         return ApiResponse.<Void>builder()
                 .success(true)
                 .message("Friend removed successfully")
@@ -56,7 +56,7 @@ public class FriendshipController {
 
     @GetMapping
     public ApiResponse<List<User>> getFriends(){
-        List<User> friends = friendShipService.getFriends();
+        List<User> friends = friendshipService.getFriends();
         return ApiResponse.<List<User>>builder()
                 .success(true)
                 .message("Friends retrieved successfully")
@@ -66,7 +66,7 @@ public class FriendshipController {
 
     @GetMapping("/pending")
     public ApiResponse<List<Friendship>> getPendingRequests(){
-        List<Friendship> pendingRequests = friendShipService.getPendingRequests();
+        List<Friendship> pendingRequests = friendshipService.getPendingRequests();
         return ApiResponse.<List<Friendship>>builder()
                 .success(true)
                 .message("Pending requests retrieved successfully")

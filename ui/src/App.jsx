@@ -27,7 +27,7 @@ function App() {
       }
     };
     fetchProfile();
-  }, [token, dispatch]);
+  }, [token]);
 
   if (isLoading) {
     return <Loading />;

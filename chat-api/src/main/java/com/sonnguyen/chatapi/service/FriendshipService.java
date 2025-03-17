@@ -6,7 +6,7 @@ import com.sonnguyen.chatapi.model.friendship.Friendship;
 import java.util.List;
 import java.util.UUID;
 
-public interface FriendShipService {
+public interface FriendshipService {
     Friendship sendFriendRequest(UUID friendId);
 
     Friendship acceptFriendRequest(UUID friendId);

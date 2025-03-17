@@ -1,6 +1,5 @@
 package com.sonnguyen.chatapi.service.impl;
 
-import com.sonnguyen.chatapi.model.User;
 import com.sonnguyen.chatapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

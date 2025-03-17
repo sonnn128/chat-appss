@@ -7,7 +7,7 @@ import com.sonnguyen.chatapi.model.friendship.FriendshipKey;
 import com.sonnguyen.chatapi.model.friendship.FriendshipStatus;
 import com.sonnguyen.chatapi.repository.FriendshipRepository;
 import com.sonnguyen.chatapi.repository.UserRepository;
-import com.sonnguyen.chatapi.service.FriendShipService;
+import com.sonnguyen.chatapi.service.FriendshipService;
 import com.sonnguyen.chatapi.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class FriendshipServiceImpl implements FriendShipService {
+public class FriendshipServiceImpl implements FriendshipService {
     private final FriendshipRepository friendshipRepository;
     private final UserRepository userRepository;
 

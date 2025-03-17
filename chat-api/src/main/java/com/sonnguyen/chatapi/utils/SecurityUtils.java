@@ -9,7 +9,7 @@ public class SecurityUtils {
     public static User getCurrentUser() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
-            return (User) principal; // Ép kiểu về User (entity của bạn)
+            return (User) principal;
         }
         throw new IllegalStateException("No authenticated user found");
     }

@@ -34,6 +34,8 @@ const Sidebar = () => {
 
   const handleAddFriend = async(user) => {
     const res  = await dispatch(sendFriendRequest(user.id)).unwrap();
+    console.log("res: ", res);
+    
     if(res){
       successToast("Send friend request successfully")
     }

@@ -55,4 +55,15 @@ public class RestControlExceptionHandle {
         );
     }
 
+    @ExceptionHandler({Exception.class})
+    @ResponseBody
+    public ResponseEntity<ApiResponse<?>> resolveAccessDeniedException(Exception e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+                ApiResponse.builder()
+                        .message("Access denied")
+                        .success(false)
+                        .build()
+        );
+    }
+
 }

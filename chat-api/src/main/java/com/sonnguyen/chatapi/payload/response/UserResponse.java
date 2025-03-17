@@ -16,7 +16,6 @@ import java.util.UUID;
 public class UserResponse {
     private UUID id;
     private String email;
-    private String username;
     private String firstname;
     private String lastname;
     private Role role;
@@ -25,7 +24,6 @@ public class UserResponse {
         return UserResponse.builder()
                 .id(user.getId())
                 .email(user.getEmail())
-                .username(user.getUsername())
                 .firstname(user.getFirstname())
                 .lastname(user.getLastname())
                 .role(user.getRole())
