@@ -11,7 +11,6 @@ import {
 
 function Main() {
   const dispatch = useDispatch();
-
   useEffect(() => {
     dispatch(fetchFriendList());
     dispatch(fetchPendingRequests());

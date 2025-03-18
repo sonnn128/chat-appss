@@ -12,6 +12,7 @@ import com.sonnguyen.chatapi.repository.ChannelRepository;
 import com.sonnguyen.chatapi.repository.MembershipRepository;
 import com.sonnguyen.chatapi.repository.UserRepository;
 import com.sonnguyen.chatapi.service.ChannelService;
+import com.sonnguyen.chatapi.service.MessageService;
 import com.sonnguyen.chatapi.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,7 @@ public class ChannelServiceImpl implements ChannelService {
     private final ChannelRepository channelRepository;
     private final UserRepository userRepository;
     private final MembershipRepository membershipRepository;
+    private final MessageService messageService;
 
 
     @Override
@@ -64,10 +66,12 @@ public class ChannelServiceImpl implements ChannelService {
         List<Membership> membershipList = membershipRepository
                 .findAllByUserId(userId)
                 .orElseThrow(() -> new CommonException("User not found", HttpStatus.BAD_REQUEST));
-        for(Membership membership : membershipList){
+        for (Membership membership : membershipList) {
             result.add(ChannelResponse.builder()
                     .id(membership.getChannel().getId())
                     .name(membership.getChannel().getName())
+                    .members(getAllMembersOfChannel(membership.getChannel().getId()))
+                    .messages(messageService.fetchAllMessagesOfChannel(membership.getChannel().getId()))
                     .dateCreated(membership.getChannel().getDateCreated())
                     .build());
         }
@@ -93,7 +97,7 @@ public class ChannelServiceImpl implements ChannelService {
     public List<MemberResponse> getAllMembersOfChannel(UUID channelId) {
         List<MemberResponse> result = new ArrayList<>();
         List<Membership> membershipList = membershipRepository.findAllMembersByChannelId(channelId).orElseThrow();
-        for(Membership membership : membershipList){
+        for (Membership membership : membershipList) {
             result.add(MemberResponse.builder()
                     .id(membership.getUser().getId())
                     .email(membership.getUser().getEmail())
@@ -123,7 +127,7 @@ public class ChannelServiceImpl implements ChannelService {
     }
 
     @Override
-    public List<Membership> getAllRequestsOfChannel(UUID channelId){
+    public List<Membership> getAllRequestsOfChannel(UUID channelId) {
         return membershipRepository.findAllRequestsByChannelId(channelId).orElseThrow();
     }
 
@@ -132,7 +136,7 @@ public class ChannelServiceImpl implements ChannelService {
         User admin = (User) SecurityUtils.getCurrentUser();
         Channel channel = channelRepository.findById(channelId).orElseThrow();
         Membership adminMembership = membershipRepository.findById(new MembershipKey(channelId, admin.getId())).orElseThrow();
-        if(adminMembership.getRole() != Role.ADMIN){
+        if (adminMembership.getRole() != Role.ADMIN) {
             return null;
         }
         return userIds.stream().map(userId -> {

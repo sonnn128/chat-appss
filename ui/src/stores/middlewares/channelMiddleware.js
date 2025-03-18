@@ -8,7 +8,11 @@ export const fetchCreateChannel = createAsyncThunk(
 
 export const fetchAllChannels = createAsyncThunk(
   "channels/fetchAllChannels",
-  async () => await channelService.getChannels()
+  async () => {
+    const res = await channelService.getChannels();
+    console.log("res: ", res);
+    return res;
+  }
 );
 
 export const fetchAllMembersOfChannel = createAsyncThunk(
@@ -17,5 +21,6 @@ export const fetchAllMembersOfChannel = createAsyncThunk(
 );
 export const addMembersToChannel = createAsyncThunk(
   "channels/addMembersToChannel",
-  async ({channelId, userIds}) => await channelService.addMembersToChannel(channelId, userIds)
+  async ({ channelId, userIds }) =>
+    await channelService.addMembersToChannel(channelId, userIds)
 );

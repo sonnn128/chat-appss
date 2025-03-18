@@ -1,4 +1,4 @@
-import "./assets/css/App.css"
+import "./assets/css/App.css";
 import Loading from "./components/Loading";
 import WsPublicDemo from "./components/WsDemo/WsPublicDemo";
 import "react-toastify/dist/ReactToastify.css";
@@ -22,7 +22,7 @@ function App() {
     const fetchProfile = async () => {
       if (token) {
         setIsLoading(true);
-        await dispatch(fetchUserProfile()); 
+        dispatch(fetchUserProfile());
         setIsLoading(false);
       }
     };
@@ -37,9 +37,18 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={user ? <Main /> : <Navigate to="/login" />} />
-        <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
-        <Route path="/register" element={!user ? <Register /> : <Navigate to="/" />} />
-        <Route path="/settings" element={user ? <Settings /> : <Navigate to="/login" />} />
+        <Route
+          path="/login"
+          element={!user ? <Login /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/register"
+          element={!user ? <Register /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/settings"
+          element={user ? <Settings /> : <Navigate to="/login" />}
+        />
         <Route path="/test" element={<WsPublicDemo />} />
       </Routes>
       <ToastContainer

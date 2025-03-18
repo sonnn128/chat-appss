@@ -13,6 +13,7 @@ const initialState = {
   error: null,
   currentChannelId: null,
   joinedChannels: [],
+  messagesOfCurrentChannel: []
 };
 
 const channelSlice = createSlice({
@@ -22,6 +23,12 @@ const channelSlice = createSlice({
     createChannel: (state, action) => {
       state.channels.push(action.payload);
     },
+    receiveMessage: (state, action) => {
+      console.log("action.payload: ", action.payload);
+      
+      state.messagesOfCurrentChannel.push(action.payload);
+    },
+    
     setChannels: (state, action) => {
       state.channels = action.payload;
     },
@@ -42,6 +49,7 @@ const channelSlice = createSlice({
     setCurrentChannel: (state, action) => {
       state.currentChannel = action.payload;
       state.currentChannelId = action.payload.id;
+      state.messagesOfCurrentChannel = action.payload.messages
     },
   },
   extraReducers: (builder) => {
@@ -109,5 +117,6 @@ export const {
   removeChannel,
   removeCurrentChannel,
   setCurrentChannel,
+  receiveMessage
 } = channelSlice.actions;
 export default channelSlice.reducer;

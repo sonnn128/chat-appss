@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import {
   IconButton,
   TextField,
@@ -13,112 +16,131 @@ import {
   ListItemText,
 } from "@mui/material";
 import { Settings, People, Person, Add, PersonAdd } from "@mui/icons-material";
-import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+
 import ChannelList from "../../components/ChannelList";
-import { useDispatch, useSelector } from "react-redux";
-import { successToast } from "../../utils/toast";
-import { fetchCreateChannel } from "../../stores/middlewares/channelMiddleware";
-import { stompClient } from "../../utils/ws";
-import { setCurrentFriend } from "../../stores/slices/friendShipSlice";
-import { removeCurrentChannel } from "../../stores/slices/channelSlice";
-import {
-  acceptFriendRequest,
-  sendFriendRequest,
-} from "../../stores/middlewares/friendshipMiddleware";
-import FriendListModal from "../../components/FriendListModal";
 import FriendList from "../../components/FriendList";
+import FriendListModal from "../../components/FriendListModal";
+import { successToast, errorToast } from "../../utils/toast";
+import { stompClient } from "../../utils/ws";
+import { fetchCreateChannel } from "../../stores/middlewares/channelMiddleware";
+import {
+  sendFriendRequest,
+  acceptFriendRequest,
+} from "../../stores/middlewares/friendshipMiddleware";
+import { setCurrentFriend } from "../../stores/slices/friendShipSlice";
+import {
+  receiveMessage,
+  removeCurrentChannel,
+} from "../../stores/slices/channelSlice";
 
 const Sidebar = () => {
+  // Redux hooks
   const dispatch = useDispatch();
-
-  const handleAddFriend = async(user) => {
-    const res  = await dispatch(sendFriendRequest(user.id)).unwrap();
-    console.log("res: ", res);
-    
-    if(res){
-      successToast("Send friend request successfully")
-    }
-  };
-
   const { friendSuggestions, friends, pendingRequests } = useSelector(
     (state) => state.friendship
   );
-  const handleAcceptRequest = (request) => {
-    dispatch(acceptFriendRequest(request.id));
-  };
-  console.log("friendSuggestions: ", friendSuggestions);
-  
-
-  const [search, setSearch] = useState("");
-
+  const { channels } = useSelector((state) => state.channel);
   const userFirstname = useSelector((state) => state.auth.user.firstname);
   const userId = useSelector((state) => state.auth.user.id);
 
+  // State management
+  const [search, setSearch] = useState("");
   const [isAddingChannel, setIsAddingChannel] = useState(false);
   const [newChannelName, setNewChannelName] = useState("");
-
   const [openFriendModal, setOpenFriendModal] = useState(false);
   const [openFriendRequestsModal, setOpenFriendRequestsModal] = useState(false);
   const [openSuggestionsModal, setOpenSuggestionsModal] = useState(false);
 
-  const handleAddChannelClick = () => {
-    setIsAddingChannel(true);
+  // Friend-related handlers
+  const handleAddFriend = async (user) => {
+    const res = await dispatch(sendFriendRequest(user.id)).unwrap();
+    if (res) successToast("Send friend request successfully");
   };
+
+  const handleAcceptRequest = (request) => {
+    dispatch(acceptFriendRequest(request.id));
+  };
+
+  // Channel-related handlers
+  const handleAddChannelClick = () => setIsAddingChannel(true);
 
   const handleChannelSubmit = async (e) => {
     if (e.key === "Enter" && newChannelName.trim()) {
-      const res = await dispatch(fetchCreateChannel(newChannelName)).unwrap();
-      const url = `/channels/${res.id}`;
-      console.log("Url: ", url);
-
-      stompClient.subscribe(`${url}`, (message) => {
-        console.log("Message received: ", message.body);
-      });
-
-      stompClient.publish({
-        destination: `/app/channels/${res.id}`,
-        body: JSON.stringify({
-          key: { channelId: res.id },
-          userId: userId,
-          content: `${userFirstname} created channel!`,
-          type: "NOTICE",
-          timestamp: Date.now(),
-        }),
-      });
-
-      setNewChannelName("");
-      successToast("Add channel successfully");
+      try {
+        const res = await dispatch(fetchCreateChannel(newChannelName)).unwrap();
+        stompClient.subscribe(`/channels/${res.id}`, (message) => {
+          console.log("Message received: ", message.body);
+        });
+        stompClient.publish({
+          destination: `/app/channels/${res.id}`,
+          body: JSON.stringify({
+            key: { channelId: res.id },
+            userId,
+            content: `${userFirstname} created channel!`,
+            type: "NOTICE",
+            timestamp: Date.now(),
+          }),
+        });
+        setNewChannelName("");
+        setIsAddingChannel(false);
+        successToast("Add channel successfully");
+      } catch (error) {
+        errorToast("Failed to create channel");
+        console.error("Error creating channel: ", error);
+      }
     }
   };
 
+  // Modal handlers
+  const handleOpenFriendModal = () => setOpenFriendModal(true);
+  const handleCloseFriendModal = () => setOpenFriendModal(false);
+  const handleOpenFriendRequestsModal = () => setOpenFriendRequestsModal(true);
+  const handleCloseFriendRequestsModal = () =>
+    setOpenFriendRequestsModal(false);
+  const handleFriendSuggestions = () => setOpenSuggestionsModal(true);
+  const handleCloseSuggestionsModal = () => setOpenSuggestionsModal(false);
+
+  // User selection handler
   const onSelectUser = () => {
     dispatch(setCurrentFriend());
     dispatch(removeCurrentChannel());
   };
 
-  const handleFriendSuggestions = async () => {
-    setOpenSuggestionsModal(true);
+  // WebSocket handling
+  const onReceivedMessage = (message) => {
+    dispatch(receiveMessage(JSON.parse(message.body)));
+    console.log("Message received from channel: ", JSON.parse(message.body));
   };
 
-  const handleOpenFriendModal = () => {
-    setOpenFriendModal(true);
-  };
+  useEffect(() => {
+    stompClient.activate();
+    stompClient.onConnect = () => {
+      console.log("Connected to WebSocket");
+      channels.forEach((channel) => {
+        console.log("Subscribing to channel: ", channel.name);
+        stompClient.subscribe(`/channels/${channel.id}`, onReceivedMessage);
+      });
+    };
 
-  const handleCloseFriendModal = () => {
-    setOpenFriendModal(false);
-  };
+    return () => {
+      stompClient.deactivate();
+      console.log("Disconnected from WebSocket");
+    };
+  }, [channels]);
 
-  const handleOpenFriendRequestsModal = () => {
-    setOpenFriendRequestsModal(true);
-  };
-
-  const handleCloseFriendRequestsModal = () => {
-    setOpenFriendRequestsModal(false);
-  };
-
-  const handleCloseSuggestionsModal = () => {
-    setOpenSuggestionsModal(false);
+  // Modal styles
+  const modalStyle = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: { xs: "90%", sm: 400 },
+    maxHeight: "80vh",
+    bgcolor: "background.paper",
+    borderRadius: 2,
+    boxShadow: 24,
+    p: 3,
+    overflowY: "auto",
   };
 
   return (
@@ -128,6 +150,7 @@ const Sidebar = () => {
       transition={{ type: "spring", stiffness: 100 }}
       className="w-80 bg-white border-r flex flex-col"
     >
+      {/* Header */}
       <div className="p-3 bg-white border-b flex items-center justify-between">
         <h2 className="text-xl font-bold text-gray-800">Messenger</h2>
         <div className="flex gap-2">
@@ -171,6 +194,7 @@ const Sidebar = () => {
         </div>
       </div>
 
+      {/* Search */}
       <div className="p-3">
         <TextField
           variant="outlined"
@@ -188,6 +212,8 @@ const Sidebar = () => {
           }}
         />
       </div>
+
+      {/* Content */}
       <div className="flex-1 overflow-y-auto">
         <div className="p-3">
           <div className="flex justify-between items-center mb-2">
@@ -246,38 +272,18 @@ const Sidebar = () => {
             </Tooltip>
           </div>
           <ChannelList />
-          <FriendList friends={friends}/>
+          <FriendList friends={friends} />
         </div>
       </div>
 
-      {/* Modal for Friend List */}
+      {/* Friend List Modal */}
       <Modal
         open={openFriendModal}
         onClose={handleCloseFriendModal}
         aria-labelledby="friend-list-modal"
-        aria-describedby="modal-to-show-friend-list"
       >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: { xs: "90%", sm: 400 },
-            maxHeight: "80vh",
-            bgcolor: "background.paper",
-            borderRadius: 2,
-            boxShadow: 24,
-            p: 3,
-            overflowY: "auto",
-          }}
-        >
-          <Typography
-            id="friend-list-modal"
-            variant="h6"
-            component="h2"
-            sx={{ mb: 2 }}
-          >
+        <Box sx={modalStyle}>
+          <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
             Your Friends
           </Typography>
           <FriendListModal friends={friends} onSelectUser={onSelectUser} />
@@ -291,34 +297,14 @@ const Sidebar = () => {
         </Box>
       </Modal>
 
-      {/* Modal for Friend Requests */}
+      {/* Friend Requests Modal */}
       <Modal
         open={openFriendRequestsModal}
         onClose={handleCloseFriendRequestsModal}
         aria-labelledby="friend-requests-modal"
-        aria-describedby="modal-to-show-friend-requests"
       >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: { xs: "90%", sm: 400 },
-            maxHeight: "80vh",
-            bgcolor: "background.paper",
-            borderRadius: 2,
-            boxShadow: 24,
-            p: 3,
-            overflowY: "auto",
-          }}
-        >
-          <Typography
-            id="friend-requests-modal"
-            variant="h6"
-            component="h2"
-            sx={{ mb: 2 }}
-          >
+        <Box sx={modalStyle}>
+          <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
             Friend Requests
           </Typography>
           <List dense>
@@ -361,13 +347,11 @@ const Sidebar = () => {
                       </Typography>
                     }
                   />
-                  {/* You might want to add Accept/Reject buttons here */}
                   <Button
                     variant="outlined"
                     size="small"
                     sx={{ ml: 2, minWidth: "80px" }}
                     onClick={() => handleAcceptRequest(request)}
-                    // Add your accept friend request handler here
                   >
                     Accept
                   </Button>
@@ -387,34 +371,14 @@ const Sidebar = () => {
         </Box>
       </Modal>
 
-      {/* Modal for Friend Suggestions */}
+      {/* Friend Suggestions Modal */}
       <Modal
         open={openSuggestionsModal}
         onClose={handleCloseSuggestionsModal}
         aria-labelledby="friend-suggestions-modal"
-        aria-describedby="modal-to-show-friend-suggestions"
       >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: { xs: "90%", sm: 400 },
-            maxHeight: "80vh",
-            bgcolor: "background.paper",
-            borderRadius: 2,
-            boxShadow: 24,
-            p: 3,
-            overflowY: "auto",
-          }}
-        >
-          <Typography
-            id="friend-suggestions-modal"
-            variant="h6"
-            component="h2"
-            sx={{ mb: 2 }}
-          >
+        <Box sx={modalStyle}>
+          <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
             Friend Suggestions
           </Typography>
           <List dense>

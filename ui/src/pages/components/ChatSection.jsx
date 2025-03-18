@@ -1,39 +1,17 @@
-import React, { useState, useEffect } from "react"; // Thêm useEffect
-import { useSelector, useDispatch } from "react-redux"; // Thêm useDispatch
+import React, { useState } from "react"; // Thêm useEffect
+import { useSelector } from "react-redux"; // Thêm useDispatch
 import ChatHeader from "./ChatHeader";
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
 import { motion } from "framer-motion";
 import { infoToast } from "../../utils/toast";
 import FriendListAddMember from "../../components/FriendListAddMember";
-import { stompClient } from "../../utils/ws"; // Thêm stompClient
-import { setMessages } from "../../stores/slices/messageSlice"; // Thêm setMessages
 
 function ChatSection() {
-  const dispatch = useDispatch(); // Thêm dispatch
   const selectedChannel = useSelector((state) => state.channel.currentChannel);
-  const { currentChannelId } = useSelector((state) => state.channel); // Thêm currentChannelId
   const { currentFriend } = useSelector((state) => state.friendship);
 
-  const [message, setMessage] = useState("");
   const [isMemberSidebarOpen, setIsMemberSidebarOpen] = useState(false);
-
-  // Thiết lập subscription khi kênh thay đổi
-  useEffect(() => {
-    if (currentChannelId && stompClient) {
-      const subscription = stompClient.subscribe(
-        `/channels/${currentChannelId}`,
-        (message) => {
-          dispatch(setMessages(JSON.parse(message.body)));
-        }
-      );
-
-      // Hủy subscription khi component unmount hoặc kênh thay đổi
-      return () => {
-        subscription.unsubscribe();
-      };
-    }
-  }, [currentChannelId, dispatch]);
 
   const handleAddFriend = async () => {
     infoToast("handleAddFriend");
@@ -74,7 +52,7 @@ function ChatSection() {
             selectedChannel={selectedChannel}
             getFullName={getFullName}
           />
-          <ChatInput message={message} setMessage={setMessage} />
+          <ChatInput />
         </>
       ) : (
         <div className="flex-1 flex items-center justify-center bg-gray-50">

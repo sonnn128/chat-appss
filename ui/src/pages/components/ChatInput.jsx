@@ -1,14 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { TextField, IconButton, Tooltip } from "@mui/material";
 import { Send } from "@mui/icons-material";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { stompClient } from "../../utils/ws";
 
-const ChatInput = ({ message, setMessage }) => {
+const ChatInput = ({}) => {
+  const [message, setMessage] = useState("");
   const { currentChannelId } = useSelector((state) => state.channel);
   const { user } = useSelector((state) => state.auth);
-
   const handleSendMessage = () => {
+    if (!currentChannelId) {
+      errorToast("Please select a channel first");
+      return;
+    }
     if (message.trim()) {
       const messageSend = {
         key: { channelId: currentChannelId },
@@ -17,13 +21,19 @@ const ChatInput = ({ message, setMessage }) => {
         type: "CHAT",
         timestamp: Date.now(),
       };
+      try {
+        console.log("currentChannelId: ", currentChannelId);
 
-      // Chỉ gửi tin nhắn, không subscribe ở đây
-      stompClient.publish({
-        destination: `/app/channels/${currentChannelId}`,
-        body: JSON.stringify(messageSend),
-      });
-      setMessage("");
+        stompClient.publish({
+          
+          destination: `/app/channels/${currentChannelId}`,
+          body: JSON.stringify(messageSend),
+        });
+        setMessage("");
+      } catch (error) {
+        console.error("Error sending message: ", error);
+        errorToast("Failed to send message");
+      }
     }
   };
 

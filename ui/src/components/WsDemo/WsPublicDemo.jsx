@@ -5,6 +5,8 @@ import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import { stompClient } from "../../utils/ws";
 
 function WsPublicDemo() {
+  console.log("WsPublicDemo: ", WsPublicDemo);
+  
   const [content, setContent] = useState("");
   const [messages, setMessages] = useState([]);
 
