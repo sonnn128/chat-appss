@@ -22,12 +22,7 @@ import {
 } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 
-const ChatHeader = ({
-  onOpenProfile,
-  onAddFriend,
-  onCancelRequest,
-  onAddMember,
-}) => {
+const ChatHeader = ({ onAddMember }) => {
   const currentChannel = useSelector((state) => state.channel.currentChannel);
   const currentFriend = useSelector((state) => state.friendship.currentFriend);
   const joinedChannels = useSelector((state) => state.channel.joinedChannels);
@@ -69,7 +64,6 @@ const ChatHeader = ({
           <Avatar
             sx={{ width: 40, height: 40, cursor: "pointer" }}
             alt={getFullName() || currentChannel?.name}
-            onClick={onOpenProfile}
           />
           <div className="ml-3">
             <h3 className="text-lg font-semibold text-gray-900">
@@ -82,13 +76,13 @@ const ChatHeader = ({
           {currentFriend ? (
             false ? (
               <Tooltip title="Cancel Request" arrow>
-                <IconButton sx={{ color: "#65676b" }} onClick={onCancelRequest}>
+                <IconButton sx={{ color: "#65676b" }}>
                   <Cancel />
                 </IconButton>
               </Tooltip>
             ) : (
               <Tooltip title="Add Friend" arrow>
-                <IconButton sx={{ color: "#65676b" }} onClick={onAddFriend}>
+                <IconButton sx={{ color: "#65676b" }}>
                   <PersonAdd />
                 </IconButton>
               </Tooltip>

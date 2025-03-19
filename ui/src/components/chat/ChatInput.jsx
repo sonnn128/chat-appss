@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { stompClient } from "../../utils/ws";
 import { errorToast } from "../../utils/toast";
 
-const ChatInput = ({}) => {
+const ChatInput = () => {
   const [message, setMessage] = useState("");
   const { currentChannelId } = useSelector((state) => state.channel);
   const { user } = useSelector((state) => state.auth);
@@ -26,7 +26,6 @@ const ChatInput = ({}) => {
         console.log("currentChannelId: ", currentChannelId);
 
         stompClient.publish({
-          
           destination: `/app/channels/${currentChannelId}`,
           body: JSON.stringify(messageSend),
         });

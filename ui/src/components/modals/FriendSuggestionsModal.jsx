@@ -1,61 +1,54 @@
 import React from "react";
-import {
-  Modal,
-  Box,
-  Typography,
-  List,
-  ListItem,
-  ListItemText,
-  Button,
-} from "@mui/material";
+import { Modal, Box, Typography, Button, Avatar } from "@mui/material";
+import modalStyle from "./modalStyles";
 
-const modalStyle = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: { xs: "90%", sm: 400 },
-  maxHeight: "80vh",
-  bgcolor: "background.paper",
-  borderRadius: 2,
-  boxShadow: 24,
-  p: 3,
-  overflowY: "auto",
-};
-
-const FriendSuggestionsModal = ({
-  open,
-  onClose,
-  suggestions,
-  onAddFriend,
-}) => {
+const FriendSuggestionsModal = ({ open, onClose, suggestions, onAddFriend }) => {
   return (
     <Modal open={open} onClose={onClose}>
       <Box sx={modalStyle}>
         <Typography variant="h6" sx={{ mb: 2 }}>
           Friend Suggestions
         </Typography>
-        <List dense>
-          {suggestions.length ? (
+        <Box className="flex-1 overflow-y-auto px-2">
+          {suggestions?.length > 0 ? (
             suggestions.map((user) => (
-              <ListItem key={user.id} sx={{ justifyContent: "space-between" }}>
-                <ListItemText
-                  primary={`${user.firstname} ${user.lastname}`}
-                  secondary={user.email}
+              <div
+                key={user.id}
+                className="flex items-center p-3 rounded-lg cursor-pointer hover:bg-gray-100"
+              >
+                <Avatar
+                  sx={{ width: 40, height: 40 }}
+                  src={user.avatar || ""}
+                  alt={user.username}
                 />
+                <div className="ml-3 flex-1 min-w-0">
+                  <p className="font-semibold text-gray-900 truncate">
+                    {user.firstname + " " + user.lastname}
+                  </p>
+                  <p className="text-sm text-gray-600 truncate">
+                    {user.email || "No email"}
+                  </p>
+                </div>
                 <Button
                   variant="outlined"
                   size="small"
                   onClick={() => onAddFriend(user.id)}
+                  sx={{ ml: 2 }}
                 >
                   Add Friend
                 </Button>
-              </ListItem>
+              </div>
             ))
           ) : (
-            <Typography>No suggestions</Typography>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ textAlign: "center", py: 2 }}
+            >
+              No suggestions
+            </Typography>
           )}
-        </List>
+        </Box>
         <Button
           onClick={onClose}
           variant="contained"

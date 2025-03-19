@@ -3,91 +3,47 @@ import { useSelector } from "react-redux";
 import ChatHeader from "../../components/chat/ChatHeader";
 import ChatMessages from "../../components/chat/ChatMessages";
 import ChatInput from "../../components/chat/ChatInput";
-import { motion } from "framer-motion";
-import { infoToast } from "../../utils/toast";
-import FriendListAddMember from "../../components/friends/FriendListAddMember";
+import AddMemberModal from "../../components/modals/AddMemberModal";
 
-function ChatSection() {
+const ChatSection = () => {
   const selectedChannel = useSelector((state) => state.channel.currentChannel);
-  const { currentFriend } = useSelector((state) => state.friendship);
+  const currentFriend = useSelector((state) => state.friendship.currentFriend);
 
-  const [isMemberSidebarOpen, setIsMemberSidebarOpen] = useState(false);
+  const [isMemberModalOpen, setIsMemberModalOpen] = useState(false);
+  const getFullName = (user) =>
+    user ? `${user.firstname} ${user.lastname}` : "";
 
-  const handleAddFriend = async () => {
-    infoToast("handleAddFriend");
-  };
+  const handleAddMember = () => setIsMemberModalOpen(true);
+  const handleCloseMemberModal = () => setIsMemberModalOpen(false);
 
-  const handleCancelRequest = () => {
-    if (currentFriend) {
-      infoToast("handleCancelRequest");
-    }
-  };
-
-  const handleOpenProfile = () => setOpenProfile(true);
-
-  const getFullName = (user) => {
-    return user ? `${user.firstname} ${user.lastname}` : "";
-  };
-
-  const onAddMember = () => {
-    setIsMemberSidebarOpen(true);
-  };
-
-  const closeMemberSidebar = () => {
-    setIsMemberSidebarOpen(false);
-  };
+  const hasActiveChat = currentFriend || selectedChannel;
+  const emptyChatMessage = (
+    <div className="flex-1 flex items-center justify-center bg-gray-50">
+      <p className="text-gray-500 text-lg">
+        Select a chat or channel to start messaging
+      </p>
+    </div>
+  );
 
   return (
     <div className="flex-1 flex flex-col bg-white relative">
-      {currentFriend || selectedChannel ? (
+      {hasActiveChat ? (
         <>
-          <ChatHeader
-            onOpenProfile={handleOpenProfile}
-            onAddFriend={handleAddFriend}
-            onCancelRequest={handleCancelRequest}
-            onAddMember={onAddMember}
-          />
+          <ChatHeader onAddMember={handleAddMember} />
           <ChatMessages
-            currentFriend={currentFriend}
-            selectedChannel={selectedChannel}
             getFullName={getFullName}
           />
           <ChatInput />
         </>
       ) : (
-        <div className="flex-1 flex items-center justify-center bg-gray-50">
-          <p className="text-gray-500 text-lg">
-            Select a chat or channel to start messaging
-          </p>
-        </div>
+        emptyChatMessage
       )}
-
-      {isMemberSidebarOpen && (
-        <motion.div
-          initial={{ x: 300 }}
-          animate={{ x: 0 }}
-          exit={{ x: 300 }}
-          transition={{ type: "spring", stiffness: 100 }}
-          className="absolute top-0 right-0 w-80 h-full bg-white border-l shadow-lg flex flex-col p-4"
-        >
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold text-gray-800">
-              Friends List
-            </h3>
-            <button
-              onClick={closeMemberSidebar}
-              className="text-gray-500 hover:text-gray-700"
-            >
-              ✕
-            </button>
-          </div>
-          <div className="flex-1">
-            <FriendListAddMember />
-          </div>
-        </motion.div>
-      )}
+      <AddMemberModal
+        open={isMemberModalOpen}
+        onClose={handleCloseMemberModal}
+      />
     </div>
   );
-}
+};
 
 export default ChatSection;
