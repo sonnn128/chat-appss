@@ -25,7 +25,6 @@ const channelSlice = createSlice({
     },
     receiveMessage: (state, action) => {
       console.log("action.payload: ", action.payload);
-      
       state.messagesOfCurrentChannel.push(action.payload);
     },
     
@@ -45,6 +44,7 @@ const channelSlice = createSlice({
     },
     removeCurrentChannel: (state) => {
       state.currentChannel = null;
+      state.currentChannelId = null;
     },
     setCurrentChannel: (state, action) => {
       state.currentChannel = action.payload;

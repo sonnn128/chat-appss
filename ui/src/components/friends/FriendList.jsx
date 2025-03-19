@@ -8,15 +8,24 @@ import {
   Typography,
 } from "@mui/material";
 import { motion } from "framer-motion";
-import { useDispatch } from "react-redux";
-import { setCurrentFriend } from "../stores/slices/friendShipSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentFriend } from "../../stores/slices/friendShipSlice";
+import { removeCurrentChannel } from "../../stores/slices/channelSlice";
 
-const FriendList = ({ friends }) => {
+const FriendList = () => {
   const dispatch = useDispatch();
+  const friends = useSelector((state) => state.friendship.friends);
+
+  const { currentChannel, currentChannelId } = useSelector(
+    (state) => state.channel
+  );
+  console.log("channel: ", currentChannel);
+  console.log("currentChannelId: ", currentChannelId);
 
   // Handle selecting a friend
   const handleSelectFriend = (friend) => {
     dispatch(setCurrentFriend(friend)); // Set the selected friend in Redux store
+    dispatch(removeCurrentChannel());
   };
 
   return (

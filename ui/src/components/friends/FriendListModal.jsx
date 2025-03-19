@@ -1,8 +1,8 @@
 import React from "react";
 import { Avatar } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentFriend } from "../stores/slices/friendShipSlice";
-import { removeCurrentChannel } from "../stores/slices/channelSlice";
+import { setCurrentFriend } from "../../stores/slices/friendShipSlice";
+import { removeCurrentChannel } from "../../stores/slices/channelSlice";
 
 function FriendListModal() {
   const dispatch = useDispatch();

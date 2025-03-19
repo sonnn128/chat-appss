@@ -13,11 +13,14 @@ const searchUsers = async (keyword) =>
 
 const getFriendSuggestions = async () => get(USER_API, { headers: getAuthHeaders() });
 
+const checkUserOnline = async () => get(`${USER_API}/presence`, { headers: getAuthHeaders() });
+
 const userService = {
   getUserProfile,
   updateUserProfile,
   searchUsers,
   getFriendSuggestions,
+  checkUserOnline
 };
 
 export default userService;

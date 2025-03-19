@@ -1,13 +1,11 @@
 import axios from "axios";
 import { errorToast } from "./toast";
 
-// Tạo một instance Axios với cấu hình chung
 const httpRequest = axios.create({
   baseURL: import.meta.env.VITE_REACT_APP_BASE_URL,
   timeout: 5000,
 });
 
-// Hàm xử lý lỗi chung
 const handleRequest = async (callback) => {
   try {
     const response = await callback();
@@ -19,7 +17,6 @@ const handleRequest = async (callback) => {
   }
 };
 
-// Định nghĩa các phương thức HTTP chung
 export const get = (url, options = {}) => handleRequest(() => httpRequest.get(url, options));
 export const post = (url, data, options = {}) => handleRequest(() => httpRequest.post(url, data, options));
 export const put = (url, data, options = {}) => handleRequest(() => httpRequest.put(url, data, options));

@@ -9,8 +9,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -18,6 +20,7 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RestTemplate restTemplate = new RestTemplate();
 
     public UserResponse updateProfile(UpdateProfileRequest request) {
         User user = SecurityUtils.getCurrentUser();
@@ -31,4 +34,11 @@ public class UserService {
     public List<User> searchUsers(String keyword) {
         return userRepository.searchUsers(keyword);
     }
+
+
+    public boolean isUserOnline(UUID userId) {
+        String url = "http://localhost:8082/api/v1/presence/is-online/" + userId;
+        return Boolean.TRUE.equals(restTemplate.getForObject(url, Boolean.class));
+    }
+
 }

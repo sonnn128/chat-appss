@@ -10,6 +10,7 @@ const ChatMessages = ({ selectedUser, getFullName }) => {
     console.log("currentFriend: ", currentFriend);
   }
   const { messagesOfCurrentChannel } = useSelector((state) => state.channel);
+  
   const currentUserId = useSelector((state) => state.auth.user.id);
   console.log("messagesOfCurrentChannel: ", messagesOfCurrentChannel);
 
@@ -50,7 +51,7 @@ const ChatMessages = ({ selectedUser, getFullName }) => {
         {messagesOfCurrentChannel &&
           messagesOfCurrentChannel.length &&
           messagesOfCurrentChannel.map((message) => (
-            <React.Fragment key={message.id}>
+            <React.Fragment key={message.timestamp}>
               {message.type === "NOTICE" ? (
                 <NoticeMessage message={message} />
               ) : (

@@ -2,7 +2,7 @@ import { getAuthHeaders } from "../utils/authUtils";
 import { get, post } from "../utils/httpRequest";
 import { successToast } from "../utils/toast";
 
-const AUTH_API = "/auth"; // Biến URL chung cho dễ quản lý
+const AUTH_API = "/auth"; 
 
 const login = async (credentials) => post(`${AUTH_API}/login`, credentials);
 

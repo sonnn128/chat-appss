@@ -17,52 +17,35 @@ import {
   Divider,
   IconButton,
 } from "@mui/joy";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import customTheme from "../theme/theme";
-import GoogleIcon from "./GoogleIcon";
+import GoogleIcon from "../utils/GoogleIcon";
 import { loginUser } from "../stores/middlewares/authMiddleware";
 import { errorToast, successToast } from "../utils/toast";
 
 function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     setIsLoading(true);
-
     try {
-      const formElements = event.currentTarget.elements;
-      const formData = {
-        email: formElements.email.value.trim(),
-        password: formElements.password.value,
-        rememberMe: formElements.rememberMe.checked,
-      };
-
-      // Basic form validation
-      if (!formData.email || !formData.password) {
+      const { email, password, rememberMe } = e.currentTarget.elements;
+      if (!email.value.trim() || !password.value)
         throw new Error("Please fill in all required fields");
-      }
-
-      // Dispatch login action and handle response
       const result = await dispatch(
-        loginUser({
-          email: formData.email,
-          password: formData.password,
-        })
+        loginUser({ email: email.value.trim(), password: password.value })
       ).unwrap();
-
-      // On successful login, navigate to dashboard or home
       if (result) {
-        navigate("/"); // Adjust this route as needed
+        navigate("/");
         successToast("Log in successfully");
       }
     } catch (err) {
       errorToast(err.message || "Login failed. Please try again.");
+      setIsLoading(false);
     }
   };
 
@@ -78,13 +61,8 @@ function Login() {
           }}
         >
           <Card variant="outlined" sx={{ width: "100%" }}>
-            <Box
-              display="flex"
-              flexDirection="column"
-              alignItems="center"
-              sx={{ mb: 2 }}
-            >
-              <Typography component="h1" fontSize="xl2" fontWeight="lg">
+            <Box sx={{ mb: 2, textAlign: "center" }}>
+              <Typography fontSize="xl2" fontWeight="lg">
                 Log in to your account
               </Typography>
               <Typography level="body2" sx={{ my: 1 }}>
@@ -126,12 +104,7 @@ function Login() {
                 </Grid>
               </Grid>
               <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  my: 2,
-                }}
+                sx={{ display: "flex", justifyContent: "space-between", my: 2 }}
               >
                 <Checkbox
                   size="sm"
@@ -148,7 +121,6 @@ function Login() {
                   Forgot your password?
                 </Link>
               </Box>
-
               <Button
                 fullWidth
                 type="submit"
@@ -158,32 +130,29 @@ function Login() {
               >
                 Log in
               </Button>
-
               <Divider sx={{ my: 2 }}>
                 <Typography level="body2" fontWeight="lg">
                   Or continue with
                 </Typography>
               </Divider>
-
               <Button
                 variant="outlined"
                 color="neutral"
                 fullWidth
                 startDecorator={<GoogleIcon />}
                 disabled={isLoading}
-                sx={{ mt: 2, mb: 2 }}
+                sx={{ my: 2 }}
               >
                 Sign in with Google
               </Button>
-
-              <Box display="flex" justifyContent="center">
+              <Box sx={{ textAlign: "center" }}>
                 <Link
                   fontSize="sm"
                   href="/register"
                   fontWeight="lg"
                   disabled={isLoading}
                 >
-                  Don&apos;t have an account? Register now!
+                  Don't have an account? Register now!
                 </Link>
               </Box>
             </Box>

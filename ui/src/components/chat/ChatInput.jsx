@@ -3,6 +3,7 @@ import { TextField, IconButton, Tooltip } from "@mui/material";
 import { Send } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import { stompClient } from "../../utils/ws";
+import { errorToast } from "../../utils/toast";
 
 const ChatInput = ({}) => {
   const [message, setMessage] = useState("");

@@ -1,6 +1,4 @@
-import "./assets/css/App.css";
 import Loading from "./components/Loading";
-import WsPublicDemo from "./components/WsDemo/WsPublicDemo";
 import "react-toastify/dist/ReactToastify.css";
 import React, { useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
@@ -49,7 +47,6 @@ function App() {
           path="/settings"
           element={user ? <Settings /> : <Navigate to="/login" />}
         />
-        <Route path="/test" element={<WsPublicDemo />} />
       </Routes>
       <ToastContainer
         position="top-right"

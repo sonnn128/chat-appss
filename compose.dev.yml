@@ -1,3 +1,5 @@
+# docker exec -it chatapps-mysql-1 mysql -u root -proot
+
 name: chatapps
 services:
   mysql:

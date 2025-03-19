@@ -8,15 +8,15 @@ function Loading() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        minHeight: "100vh", // Đảm bảo chiếm toàn bộ chiều cao viewport
-        backgroundColor: "#fff", // Giữ background trắng giống ChatSection
+        minHeight: "100vh",
+        backgroundColor: "#fff",
       }}
     >
       <CircularProgress
         size={40}
         thickness={4}
         sx={{
-          color: "#1877f2", // Màu xanh của Messenger
+          color: "#1877f2",
         }}
       />
     </div>

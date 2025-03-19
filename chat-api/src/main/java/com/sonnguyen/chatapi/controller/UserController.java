@@ -47,4 +47,11 @@ public class UserController {
 
         return ResponseEntity.ok(filteredUsers);
     }
+
+    @GetMapping("/presence")
+    public ResponseEntity<?> isUserOnline() {
+        User user = SecurityUtils.getCurrentUser();
+        boolean ok = userService.isUserOnline(user.getId());
+        return ResponseEntity.ok(ok);
+    }
 }

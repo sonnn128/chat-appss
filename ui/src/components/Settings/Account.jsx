@@ -1,46 +1,18 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Avatar, Typography, Box, Button, TextField } from "@mui/material";
 import { ExitToApp, Save, Cancel } from "@mui/icons-material";
-import userService from "../../services/userService";
-import { successToast, errorToast } from "../../utils/toast";
+import { successToast } from "../../utils/toast";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../stores/slices/authSlice";
 
-const Account = ({ user, handleLogout }) => {
-  const navigate = useNavigate();
+const Account = () => {
+  const user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
-  const [editedUser, setEditedUser] = useState({
-    firstname: user?.firstname || "",
-    lastname: user?.lastname || "",
-  });
-
-  const handleEditClick = () => setIsEditing(true);
-
-  const handleCancel = () => {
-    setIsEditing(false);
-    setEditedUser({
-      firstname: user?.firstname || "",
-      lastname: user?.lastname || "",
-    });
-  };
-
-  const handleSave = async () => {
-    try {
-      await userService.updateUserProfile(editedUser);
-      successToast("Profile updated successfully!");
-      setIsEditing(false);
-      navigate("/");
-    } catch (error) {
-      errorToast("Failed to update profile");
-    }
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setEditedUser((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  const handleLogout = () => {
+    dispatch(logout());
+    successToast("Log out successfully");
   };
 
   return (
@@ -65,16 +37,12 @@ const Account = ({ user, handleLogout }) => {
                   fullWidth
                   label="First Name"
                   name="firstname"
-                  value={editedUser.firstname}
-                  onChange={handleChange}
                   margin="normal"
                 />
                 <TextField
                   fullWidth
                   label="Last Name"
                   name="lastname"
-                  value={editedUser.lastname}
-                  onChange={handleChange}
                   margin="normal"
                 />
               </>
@@ -86,11 +54,20 @@ const Account = ({ user, handleLogout }) => {
                 <Typography variant="body2" color="text.secondary">
                   <strong>Email:</strong> {user?.email}
                 </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ mt: 0.5 }}
+                >
                   <strong>Username:</strong> {user?.username || "N/A"}
                 </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-                  <strong>Roles:</strong> {user?.roles?.join(", ") || "No roles assigned"}
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ mt: 0.5 }}
+                >
+                  <strong>Roles:</strong>{" "}
+                  {user?.roles?.join(", ") || "No roles assigned"}
                 </Typography>
               </>
             )}
@@ -99,19 +76,35 @@ const Account = ({ user, handleLogout }) => {
         <Box sx={{ display: "flex", gap: 2 }}>
           {isEditing ? (
             <>
-              <Button variant="contained" color="primary" startIcon={<Save />} onClick={handleSave}>
+              <Button variant="contained" color="primary" startIcon={<Save />}>
                 Save
               </Button>
-              <Button variant="outlined" color="secondary" startIcon={<Cancel />} onClick={handleCancel}>
+              <Button
+                variant="outlined"
+                color="secondary"
+                startIcon={<Cancel />}
+                onClick={() => {
+                  setIsEditing(false);
+                }}
+              >
                 Cancel
               </Button>
             </>
           ) : (
             <>
-              <Button variant="contained" color="primary" onClick={handleEditClick}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setIsEditing(true)}
+              >
                 Edit Profile
               </Button>
-              <Button variant="outlined" color="error" startIcon={<ExitToApp />} onClick={handleLogout}>
+              <Button
+                variant="outlined"
+                color="error"
+                startIcon={<ExitToApp />}
+                onClick={handleLogout}
+              >
                 Log Out
               </Button>
             </>

@@ -15,7 +15,7 @@ import {
   Divider,
   Link,
 } from "@mui/joy";
-import GoogleIcon from "./GoogleIcon";
+import GoogleIcon from "../utils/GoogleIcon";
 import { useDispatch } from "react-redux";
 import { registerUser } from "../stores/middlewares/authMiddleware";
 import { errorToast, successToast } from "../utils/toast";

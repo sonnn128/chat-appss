@@ -9,6 +9,7 @@ import com.sonnguyen.chatapi.repository.ChannelRepository;
 import com.sonnguyen.chatapi.service.ChannelService;
 import com.sonnguyen.chatapi.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/channels")
 @RequiredArgsConstructor
@@ -32,10 +34,11 @@ public class ChannelController {
         return channelService.createChannel(channel);
     }
 
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<List<ChannelResponse>> getAllChannelsOfUser(
     ) {
         User user = SecurityUtils.getCurrentUser();
+        log.error("User: {}", user.toString());
         return ResponseEntity.ok(channelService.getAllChannelsOfUser(user.getId()));
     }
 

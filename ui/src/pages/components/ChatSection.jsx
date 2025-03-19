@@ -1,11 +1,11 @@
-import React, { useState } from "react"; // Thêm useEffect
-import { useSelector } from "react-redux"; // Thêm useDispatch
-import ChatHeader from "./ChatHeader";
-import ChatMessages from "./ChatMessages";
-import ChatInput from "./ChatInput";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import ChatHeader from "../../components/chat/ChatHeader";
+import ChatMessages from "../../components/chat/ChatMessages";
+import ChatInput from "../../components/chat/ChatInput";
 import { motion } from "framer-motion";
 import { infoToast } from "../../utils/toast";
-import FriendListAddMember from "../../components/FriendListAddMember";
+import FriendListAddMember from "../../components/friends/FriendListAddMember";
 
 function ChatSection() {
   const selectedChannel = useSelector((state) => state.channel.currentChannel);

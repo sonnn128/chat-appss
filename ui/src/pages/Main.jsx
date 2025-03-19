@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import Sidebar from "./components/Sidebar";
 import ChatSection from "./components/ChatSection";
@@ -16,7 +16,7 @@ function Main() {
     dispatch(fetchPendingRequests());
     dispatch(fetchFriendSuggestions());
     dispatch(fetchAllChannels());
-    dispatch(fetchFriendList())
+    dispatch(fetchFriendList());
   }, []);
 
   return (

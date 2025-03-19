@@ -14,7 +14,6 @@ import {
   AccountCircle,
   Notifications,
   Lock,
-  Palette,
 } from "@mui/icons-material";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
@@ -23,18 +22,15 @@ import { successToast } from "../utils/toast";
 import Account from "../components/Settings/Account";
 import NotificationsSection from "../components/Settings/Notifications";
 import Privacy from "../components/Settings/Privacy";
-import Appearance from "../components/Settings/Appearance";
 
 const sections = [
   { name: "Account", icon: <AccountCircle /> },
   { name: "Notifications", icon: <Notifications /> },
   { name: "Privacy", icon: <Lock /> },
-  { name: "Appearance", icon: <Palette /> },
 ];
 
 function Settings() {
   const [selectedSection, setSelectedSection] = useState("Account");
-  const [darkMode, setDarkMode] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
@@ -53,8 +49,6 @@ function Settings() {
         return <NotificationsSection />;
       case "Privacy":
         return <Privacy />;
-      case "Appearance":
-        return <Appearance darkMode={darkMode} setDarkMode={setDarkMode} />;
       default:
         return null;
     }
@@ -62,13 +56,12 @@ function Settings() {
 
   return (
     <Box sx={{ display: "flex", height: "100vh", bgcolor: "#f0f2f5" }}>
-      {/* Sidebar trái */}
       <motion.div
         initial={{ x: -500 }}
         animate={{ x: 0 }}
         transition={{ type: "spring", stiffness: 100 }}
         sx={{
-          width: 360, // Giảm chiều rộng giống Messenger
+          width: 360,
           bgcolor: "white",
           borderRight: 1,
           borderColor: "grey.200",
@@ -77,7 +70,6 @@ function Settings() {
           boxShadow: "0 1px 2px rgba(0,0,0,0.1)",
         }}
       >
-        {/* Tiêu đề */}
         <Box
           sx={{
             p: 2,
@@ -101,7 +93,6 @@ function Settings() {
           </Typography>
         </Box>
 
-        {/* Danh sách tùy chọn */}
         <List sx={{ flex: 1, py: 0 }}>
           {sections.map((section) => (
             <ListItem
@@ -143,7 +134,6 @@ function Settings() {
         </List>
       </motion.div>
 
-      {/* Khu vực nội dung */}
       <Box
         sx={{
           flex: 1,
