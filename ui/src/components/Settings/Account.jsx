@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Avatar, Typography, Box, Button, TextField } from "@mui/material";
 import { ExitToApp, Save, Cancel } from "@mui/icons-material";
-import { successToast } from "../../utils/toast";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../stores/slices/authSlice";
 
@@ -12,7 +11,6 @@ const Account = () => {
   const [isEditing, setIsEditing] = useState(false);
   const handleLogout = () => {
     dispatch(logout());
-    successToast("Log out successfully");
   };
 
   return (

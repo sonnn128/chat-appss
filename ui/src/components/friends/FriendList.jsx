@@ -16,15 +16,8 @@ const FriendList = () => {
   const dispatch = useDispatch();
   const friends = useSelector((state) => state.friendship.friends);
 
-  const { currentChannel, currentChannelId } = useSelector(
-    (state) => state.channel
-  );
-  console.log("channel: ", currentChannel);
-  console.log("currentChannelId: ", currentChannelId);
-
-  // Handle selecting a friend
   const handleSelectFriend = (friend) => {
-    dispatch(setCurrentFriend(friend)); // Set the selected friend in Redux store
+    dispatch(setCurrentFriend(friend)); 
     dispatch(removeCurrentChannel());
   };
 

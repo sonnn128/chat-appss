@@ -33,7 +33,6 @@ const Sidebar = () => {
     (state) => state.auth.user
   );
 
-  const [search, setSearch] = useState("");
   const [isAddingChannel, setIsAddingChannel] = useState(false);
   const [newChannelName, setNewChannelName] = useState("");
   const [openModal, setOpenModal] = useState({
@@ -161,8 +160,6 @@ const Sidebar = () => {
           fullWidth
           placeholder="Search Messenger"
           size="small"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
           sx={textFieldSx}
         />
       </div>

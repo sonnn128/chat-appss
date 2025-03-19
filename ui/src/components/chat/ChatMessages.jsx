@@ -4,15 +4,8 @@ import { useSelector } from "react-redux";
 
 const ChatMessages = ({ selectedUser, getFullName }) => {
   const messagesEndRef = useRef(null);
-  const currentFriend = useSelector((state) => state.friendship.currentFriend);
-
-  if (currentFriend) {
-    console.log("currentFriend: ", currentFriend);
-  }
   const { messagesOfCurrentChannel } = useSelector((state) => state.channel);
-  
   const currentUserId = useSelector((state) => state.auth.user.id);
-  console.log("messagesOfCurrentChannel: ", messagesOfCurrentChannel);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

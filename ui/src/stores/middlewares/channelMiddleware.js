@@ -10,7 +10,6 @@ export const fetchAllChannels = createAsyncThunk(
   "channels/fetchAllChannels",
   async () => {
     const res = await channelService.getChannels();
-    console.log("res: ", res);
     return res;
   }
 );

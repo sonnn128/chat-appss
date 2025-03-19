@@ -13,7 +13,6 @@ import {
   ArrowBack,
   AccountCircle,
   Notifications,
-  Lock,
 } from "@mui/icons-material";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
@@ -21,12 +20,10 @@ import { logout } from "../stores/slices/authSlice";
 import { successToast } from "../utils/toast";
 import Account from "../components/Settings/Account";
 import NotificationsSection from "../components/Settings/Notifications";
-import Privacy from "../components/Settings/Privacy";
 
 const sections = [
   { name: "Account", icon: <AccountCircle /> },
   { name: "Notifications", icon: <Notifications /> },
-  { name: "Privacy", icon: <Lock /> },
 ];
 
 function Settings() {

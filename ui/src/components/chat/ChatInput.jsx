@@ -23,8 +23,6 @@ const ChatInput = () => {
         timestamp: Date.now(),
       };
       try {
-        console.log("currentChannelId: ", currentChannelId);
-
         stompClient.publish({
           destination: `/app/channels/${currentChannelId}`,
           body: JSON.stringify(messageSend),
