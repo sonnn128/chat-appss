@@ -1,11 +1,11 @@
-# docker exec -it chatapps-mysql-1 mysql -u root -proot
-
 name: chatapps
 services:
   mysql:
     image: mysql:latest
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD-root}
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
       MYSQL_DATABASE: chatapps
     ports:
       - "3306:3306"
@@ -21,17 +21,8 @@ services:
     image: cassandra:latest
     ports:
       - "9042:9042"
-    environment:
-      - CASSANDRA_CLUSTER_NAME=chat_cluster
     healthcheck:
-      test:
-        [
-          "CMD",
-          "cqlsh",
-          "-u cassandra",
-          "-p cassandra",
-          "-e describe keyspaces"
-        ]
+      test: [ "CMD", "cqlsh", "-u cassandra", "-p cassandra", "-e describe keyspaces" ]
       interval: 15s
       timeout: 10s
       retries: 10

@@ -1,5 +1,5 @@
-import { getAuthHeaders } from "../utils/authUtils";
-import { get, post } from "../utils/httpRequest";
+import { getAuthHeaders } from "@/utils/authUtils";
+import { get, post } from "@/utils/httpRequest";
 
 const CHANNEL_API = "/channels";
 

@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchUserProfile, loginUser } from '../middlewares/authMiddleware';
+import { fetchUserProfile, loginUser } from '@/stores/middlewares/authMiddleware';
 
 const initialState = {
     user: null,

@@ -1,14 +1,15 @@
-import Loading from "./components/Loading";
-import "react-toastify/dist/ReactToastify.css";
 import React, { useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import Login from "./pages/Login";
-import Main from "./pages/Main";
-import Register from "./pages/Register";
-import { ToastContainer } from "react-toastify";
-import Settings from "./pages/Settings";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUserProfile } from "./stores/middlewares/authMiddleware";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+import { fetchUserProfile } from "@/stores/middlewares/authMiddleware";
+import Loading from "@/components/Loading";
+import Login from "@/pages/Login";
+import Main from "@/pages/Main";
+import Register from "@/pages/Register";
+import Settings from "@/pages/Settings";
 
 function App() {
   const dispatch = useDispatch();
@@ -25,7 +26,7 @@ function App() {
       }
     };
     fetchProfile();
-  }, [token]);
+  }, [token, dispatch]);
 
   if (isLoading) {
     return <Loading />;

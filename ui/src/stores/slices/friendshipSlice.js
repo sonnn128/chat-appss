@@ -7,7 +7,7 @@ import {
   sendFriendRequest,
   acceptFriendRequest,
   removeFriend,
-} from "../middlewares/friendshipMiddleware";
+} from "@/stores/middlewares/friendshipMiddleware"
 
 const initialState = {
   currentFriend: null,

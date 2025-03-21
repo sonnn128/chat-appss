@@ -9,8 +9,8 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentFriend } from "../../stores/slices/friendShipSlice";
-import { removeCurrentChannel } from "../../stores/slices/channelSlice";
+import { setCurrentFriend } from "@/stores/slices/friendshipSlice";
+import { removeCurrentChannel } from "@/stores/slices/channelSlice";
 
 const FriendList = () => {
   const dispatch = useDispatch();

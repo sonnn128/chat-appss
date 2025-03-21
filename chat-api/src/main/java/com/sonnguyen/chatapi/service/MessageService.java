@@ -2,6 +2,7 @@ package com.sonnguyen.chatapi.service;
 
 import com.sonnguyen.chatapi.payload.response.MessageResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -10,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MessageService {
@@ -19,6 +21,7 @@ public class MessageService {
 
     public List<MessageResponse> fetchAllMessagesOfChannel(UUID channelId) {
         String apiUrl = "http://" + chatServerHostname + ":" + chatServerPort + "/api/v1/messages/" + channelId;
+        log.error("apiUrl: " + apiUrl);
         MessageResponse[] messages = restTemplate.getForObject(apiUrl, MessageResponse[].class);
         if (messages != null) {
             return Arrays.stream(messages).toList();

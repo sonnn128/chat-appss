@@ -1,5 +1,6 @@
 package com.sonnguyen.chat_server.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.cassandra.config.*;
@@ -10,6 +11,7 @@ import org.springframework.lang.NonNull;
 import java.util.List;
 //  auto generate keyspace if not exist
 
+@Slf4j
 @Configuration
 public class CassandraConfiguration extends AbstractCassandraConfiguration implements BeanClassLoaderAware {
     String host = System.getenv("CASSANDRA_HOST") == null ? "127.0.0.1" : System.getenv("CASSANDRA_HOST");
@@ -17,6 +19,7 @@ public class CassandraConfiguration extends AbstractCassandraConfiguration imple
     @Override
     @NonNull
     protected List<CreateKeyspaceSpecification> getKeyspaceCreations() {
+        log.info("HOST + PORT: " + host + ":" + port);
         CreateKeyspaceSpecification specification = CreateKeyspaceSpecification.createKeyspace("chatapps")
                 .with(KeyspaceOption.DURABLE_WRITES, true)
                 .withSimpleReplication(1)

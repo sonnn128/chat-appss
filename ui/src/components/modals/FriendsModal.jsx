@@ -1,8 +1,8 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Modal, Box, Typography, Button, Avatar } from "@mui/material";
-import { setCurrentFriend } from "../../stores/slices/friendShipSlice";
-import { removeCurrentChannel } from "../../stores/slices/channelSlice";
+import { setCurrentFriend } from "@/stores/slices/friendshipSlice";
+import { removeCurrentChannel } from "@/stores/slices/channelSlice";
 import modalStyle from "./modalStyles";
 
 const FriendsModal = ({ open, onClose }) => {

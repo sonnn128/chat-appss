@@ -1,5 +1,4 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-.env
 .idea/
 .DS_Store
 data
@@ -10,6 +9,7 @@ ui/.env
 ui/.env.production
 ui/build
 ui/package-lock.json
+ui/dist
 
 # chat-api - Spring Boot
 chat-api/HELP.md
@@ -69,4 +69,4 @@ storage-server
 *.docx
 *.sql
 .vscode
-docker-compose.yml
+# docker-compose.yml

@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import friendshipService from "../../services/friendshipService";
+import friendshipService from "@/services/friendshipService";
 
 export const fetchFriendList = createAsyncThunk(
   "friendship/fetchFriendList",

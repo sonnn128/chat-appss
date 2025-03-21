@@ -10,7 +10,7 @@ import {
   Button,
   Stack,
 } from "@mui/joy";
-import { addMembersToChannel } from "../../stores/middlewares/channelMiddleware";
+import { addMembersToChannel } from "@/stores/middlewares/channelMiddleware";
 
 import modalStyle from "./modalStyles";
 

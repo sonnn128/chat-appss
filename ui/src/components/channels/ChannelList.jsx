@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { Avatar, AvatarGroup } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentChannel } from "../../stores/slices/channelSlice";
-import { removeCurrentFriend } from "../../stores/slices/friendShipSlice";
-import { fetchAllMembersOfChannel } from "../../stores/middlewares/channelMiddleware";
+import { setCurrentChannel } from "@/stores/slices/channelSlice";
+import { removeCurrentFriend } from "@/stores/slices/friendshipSlice";
+import { fetchAllMembersOfChannel } from "@/stores/middlewares/channelMiddleware";
 
 function ChannelList() {
   const dispatch = useDispatch();

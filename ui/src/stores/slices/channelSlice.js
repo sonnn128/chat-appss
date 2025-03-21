@@ -4,7 +4,7 @@ import {
   fetchAllChannels,
   fetchAllMembersOfChannel,
   addMembersToChannel,
-} from "../middlewares/channelMiddleware";
+} from "@/stores/middlewares/channelMiddleware";
 
 const initialState = {
   channels: [],

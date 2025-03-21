@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Avatar, Typography, Box, Button, TextField } from "@mui/material";
 import { ExitToApp, Save, Cancel } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../stores/slices/authSlice";
+import { logout } from "@/stores/slices/authSlice";
 
 const Account = () => {
   const user = useSelector((state) => state.auth.user);

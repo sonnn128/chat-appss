@@ -1,6 +1,6 @@
-import { getAuthHeaders } from "../utils/authUtils";
-import { get, post } from "../utils/httpRequest";
-import { successToast } from "../utils/toast";
+import { getAuthHeaders } from "@/utils/authUtils";
+import { get, post } from "@/utils/httpRequest";
+import { successToast } from "@/utils/toast";
 
 const AUTH_API = "/auth"; 
 

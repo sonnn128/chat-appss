@@ -1,5 +1,5 @@
-import { getAuthHeaders } from "../utils/authUtils";
-import { get, post, put, del } from "../utils/httpRequest";
+import { getAuthHeaders } from "@/utils/authUtils";
+import { get, post, put, del } from "@/utils/httpRequest";
 
 const FRIENDSHIP_API = "/friendships";
 

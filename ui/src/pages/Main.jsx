@@ -1,14 +1,13 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import Sidebar from "./components/Sidebar";
-import ChatSection from "./components/ChatSection";
-import { fetchAllChannels } from "../stores/middlewares/channelMiddleware";
+import Sidebar from "@/pages/components/Sidebar";
+import ChatSection from "@/pages/components/ChatSection";
+import { fetchAllChannels } from "@/stores/middlewares/channelMiddleware";
 import {
   fetchFriendList,
   fetchFriendSuggestions,
-  fetchPendingRequests,
-} from "../stores/middlewares/friendshipMiddleware";
-
+  fetchPendingRequests
+} from "@/stores/middlewares/friendshipMiddleware"
 function Main() {
   const dispatch = useDispatch();
   useEffect(() => {

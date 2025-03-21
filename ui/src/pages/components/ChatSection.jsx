@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import ChatHeader from "../../components/chat/ChatHeader";
-import ChatMessages from "../../components/chat/ChatMessages";
-import ChatInput from "../../components/chat/ChatInput";
-import AddMemberModal from "../../components/modals/AddMemberModal";
+import ChatHeader from "@/components/chat/ChatHeader";
+import ChatMessages from "@/components/chat/ChatMessages";
+import ChatInput from "@/components/chat/ChatInput";
+import AddMemberModal from "@/components/modals/AddMemberModal";
 
 const ChatSection = () => {
   const selectedChannel = useSelector((state) => state.channel.currentChannel);

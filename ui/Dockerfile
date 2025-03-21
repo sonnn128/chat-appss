@@ -14,6 +14,6 @@ RUN npm run build
 FROM base AS production
 WORKDIR /app
 RUN npm install -g serve
-COPY --from=build /app/build /app/build
+COPY --from=build /app/dist /app/dist
 EXPOSE 5173
-ENTRYPOINT serve -s -p 5173 build
+ENTRYPOINT serve -s -p 5173 dist

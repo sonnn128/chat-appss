@@ -4,24 +4,25 @@ import { useDispatch } from "react-redux";
 import { CssVarsProvider } from "@mui/joy/styles";
 import {
   Box,
-  Typography,
+  Button,
   Card,
+  Checkbox,
   Container,
-  Grid,
+  Divider,
   FormControl,
   FormLabel,
-  Input,
-  Button,
-  Link,
-  Checkbox,
-  Divider,
+  Grid,
   IconButton,
+  Input,
+  Link,
+  Typography,
 } from "@mui/joy";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import customTheme from "../theme/theme";
-import GoogleIcon from "../utils/GoogleIcon";
-import { loginUser } from "../stores/middlewares/authMiddleware";
-import { errorToast, successToast } from "../utils/toast";
+
+import { loginUser } from "@/stores/middlewares/authMiddleware";
+import customTheme from "@/theme/theme";
+import GoogleIcon from "@/utils/GoogleIcon";
+import { errorToast, successToast } from "@/utils/toast";
 
 function Login() {
   const navigate = useNavigate();

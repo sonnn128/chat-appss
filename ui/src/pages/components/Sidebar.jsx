@@ -4,24 +4,25 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { IconButton, TextField, Tooltip, Badge, Button } from "@mui/material";
 import { Settings, People, Person, Add, PersonAdd } from "@mui/icons-material";
-import ChannelList from "../../components/channels/ChannelList";
-import FriendList from "../../components/friends/FriendList";
-import FriendsModal from "../../components/modals/FriendsModal";
-import FriendRequestsModal from "../../components/modals/FriendRequestsModal";
-import FriendSuggestionsModal from "../../components/modals/FriendSuggestionsModal";
-import { successToast, errorToast } from "../../utils/toast";
-import { stompClient } from "../../utils/ws";
-import { fetchCreateChannel } from "../../stores/middlewares/channelMiddleware";
+import ChannelList from "@/components/channels/ChannelList";
+import FriendList from "@/components/friends/FriendList";
+import FriendsModal from "@/components/modals/FriendsModal";
+import FriendRequestsModal from "@/components/modals/FriendRequestsModal";
+import FriendSuggestionsModal from "@/components/modals/FriendSuggestionsModal"; 
+import { successToast, errorToast } from "@/utils/toast";
+import { stompClient } from "@/utils/ws";
+import { fetchCreateChannel } from "@/stores/middlewares/channelMiddleware";
 import {
   sendFriendRequest,
   acceptFriendRequest,
-} from "../../stores/middlewares/friendshipMiddleware";
-import { setCurrentFriend } from "../../stores/slices/friendshipSlice";
+} from "@/stores/middlewares/friendshipMiddleware"
+import { setCurrentFriend } from "@/stores/slices/friendshipSlice";
+
 import {
   receiveMessage,
   removeCurrentChannel,
   setCurrentChannel,
-} from "../../stores/slices/channelSlice";
+} from "@/stores/slices/channelSlice";
 
 const Sidebar = () => {
   const dispatch = useDispatch();
