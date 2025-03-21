@@ -13,7 +13,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/messages")
 public class ApiController {
-    final private ChannelMessageService channelMessageService;
+    private final ChannelMessageService channelMessageService;
     @GetMapping("/{channelId}")
     public ResponseEntity<List<ChannelMessage>> getAllMessagesOfChannel(@PathVariable UUID channelId){
         return ResponseEntity.ok(channelMessageService.getAllMessagesOfChannel(channelId));

@@ -4,10 +4,8 @@ import com.sonnguyen.chatapi.payload.response.MessageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,18 +13,21 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class MessageService {
-    private final RestTemplate restTemplate;
+    private final WebClient.Builder webClientBuilder;
     private final String chatServerHostname = System.getenv("CHAT_SERVER_HOST") == null ? "localhost" : System.getenv("CHAT_SERVER_HOST");
     private final int chatServerPort = Integer.parseInt(System.getenv("CHAT_SERVER_PORT") == null ? "8080" : System.getenv("CHAT_SERVER_PORT"));
 
     public List<MessageResponse> fetchAllMessagesOfChannel(UUID channelId) {
         String apiUrl = "http://" + chatServerHostname + ":" + chatServerPort + "/api/v1/messages/" + channelId;
-        log.error("apiUrl: " + apiUrl);
-        MessageResponse[] messages = restTemplate.getForObject(apiUrl, MessageResponse[].class);
-        if (messages != null) {
-            return Arrays.stream(messages).toList();
-        }
-        return new ArrayList<>();
+        log.info("Fetching messages from URL: {}", apiUrl);
+
+        WebClient webClient = webClientBuilder.baseUrl("http://" + chatServerHostname + ":" + chatServerPort).build();
+
+        return webClient.get()
+                .uri("/api/v1/messages/{channelId}", channelId)
+                .retrieve()
+                .bodyToFlux(MessageResponse.class)
+                .collectList()
+                .block(); // async list
     }
 }
-

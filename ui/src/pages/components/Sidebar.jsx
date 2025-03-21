@@ -8,14 +8,14 @@ import ChannelList from "@/components/channels/ChannelList";
 import FriendList from "@/components/friends/FriendList";
 import FriendsModal from "@/components/modals/FriendsModal";
 import FriendRequestsModal from "@/components/modals/FriendRequestsModal";
-import FriendSuggestionsModal from "@/components/modals/FriendSuggestionsModal"; 
+import FriendSuggestionsModal from "@/components/modals/FriendSuggestionsModal";
 import { successToast, errorToast } from "@/utils/toast";
 import { stompClient } from "@/utils/ws";
 import { fetchCreateChannel } from "@/stores/middlewares/channelMiddleware";
 import {
   sendFriendRequest,
   acceptFriendRequest,
-} from "@/stores/middlewares/friendshipMiddleware"
+} from "@/stores/middlewares/friendshipMiddleware";
 import { setCurrentFriend } from "@/stores/slices/friendshipSlice";
 
 import {
@@ -30,10 +30,11 @@ const Sidebar = () => {
     (state) => state.friendship
   );
   const { channels } = useSelector((state) => state.channel);
+  console.log("channels: ", channels);
+  
   const { firstname: userFirstname, id: userId } = useSelector(
     (state) => state.auth.user
   );
-
   const [isAddingChannel, setIsAddingChannel] = useState(false);
   const [newChannelName, setNewChannelName] = useState("");
   const [openModal, setOpenModal] = useState({
