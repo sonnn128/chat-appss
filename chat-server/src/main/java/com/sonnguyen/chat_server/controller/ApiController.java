@@ -16,6 +16,7 @@ public class ApiController {
     private final ChannelMessageService channelMessageService;
     @GetMapping("/{channelId}")
     public ResponseEntity<List<ChannelMessage>> getAllMessagesOfChannel(@PathVariable UUID channelId){
+        System.out.println("Received request for channel: " + channelId);
         return ResponseEntity.ok(channelMessageService.getAllMessagesOfChannel(channelId));
     }
 }

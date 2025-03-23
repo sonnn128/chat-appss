@@ -5,10 +5,12 @@ import com.sonnguyen.chatapi.model.membership.Membership;
 import com.sonnguyen.chatapi.model.membership.Role;
 import com.sonnguyen.chatapi.payload.response.ChannelResponse;
 import com.sonnguyen.chatapi.payload.response.MemberResponse;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
+@Service
 public interface ChannelService {
     ChannelResponse createChannel(Channel channel);
     List<ChannelResponse> getAllChannelsOfUser(UUID userId);

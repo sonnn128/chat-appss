@@ -15,6 +15,7 @@ import com.sonnguyen.chatapi.service.ChannelService;
 import com.sonnguyen.chatapi.service.MessageService;
 import com.sonnguyen.chatapi.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ChannelServiceImpl implements ChannelService {
@@ -36,6 +38,10 @@ public class ChannelServiceImpl implements ChannelService {
 
     @Override
     public ChannelResponse createChannel(Channel channel) {
+        User usertmp = SecurityUtils.getCurrentUser();
+
+        log.info("Get all channels of user1 {}", usertmp.getUsername());
+
         User user = SecurityUtils.getCurrentUser();
 
         channel.setDateCreated(LocalDateTime.now());
@@ -52,6 +58,7 @@ public class ChannelServiceImpl implements ChannelService {
                         .joiningDate(LocalDateTime.now())
                         .build()
         );
+        log.info("Get all channels of user2 {}", usertmp.getUsername());
 
         return ChannelResponse.builder()
                 .id(newChannel.getId())
@@ -62,10 +69,15 @@ public class ChannelServiceImpl implements ChannelService {
 
     @Override
     public List<ChannelResponse> getAllChannelsOfUser(UUID userId) {
+        log.warn("OKOK1");
+
         List<ChannelResponse> result = new ArrayList<>();
         List<Membership> membershipList = membershipRepository
                 .findAllByUserId(userId)
                 .orElseThrow(() -> new CommonException("User not found", HttpStatus.BAD_REQUEST));
+
+        log.warn("OKOK2");
+
         for (Membership membership : membershipList) {
             result.add(ChannelResponse.builder()
                     .id(membership.getChannel().getId())
@@ -75,6 +87,7 @@ public class ChannelServiceImpl implements ChannelService {
                     .dateCreated(membership.getChannel().getDateCreated())
                     .build());
         }
+        log.warn("OKOK3");
         return result;
     }
 

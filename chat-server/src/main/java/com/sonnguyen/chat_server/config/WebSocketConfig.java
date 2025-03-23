@@ -13,11 +13,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry
                 .addEndpoint("/ws")
-                .setAllowedOrigins("http://localhost:5173", "http://localhost:8082")
-                .withSockJS()
-                .setStreamBytesLimit(512 * 1024) // Tăng giới hạn nếu cần
-                .setHttpMessageCacheSize(1000);
-        System.out.println("WebSocket endpoint /ws registered");
+                .setAllowedOriginPatterns("http://localhost:5173")
+                .withSockJS();
     }
 
     @Override

@@ -38,7 +38,6 @@ public class ChannelController {
     public ResponseEntity<List<ChannelResponse>> getAllChannelsOfUser(
     ) {
         User user = SecurityUtils.getCurrentUser();
-        log.error("User: {}", user.toString());
         return ResponseEntity.ok(channelService.getAllChannelsOfUser(user.getId()));
     }
 
