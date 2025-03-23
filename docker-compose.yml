@@ -61,10 +61,10 @@ services:
       - ./.env
     restart: unless-stopped
 
-  chat-ui:
-    build: ./ui
+  chat-api-gateway:
+    build: ./api-gateway
     ports:
-      - "${CHAT_UI_PORT-5173}:5173"
+      - "${CHAT_API_GATEWAY_PORT-8082}:8082"
     depends_on:
       - chat-api
       - chat-server
@@ -72,6 +72,21 @@ services:
       - chatapps
     env_file:
       - ./.env
+      
+  chat-ui:
+    build: ./ui
+    ports:
+      - "${CHAT_UI_PORT-5173}:5173"
+    depends_on:
+      - chat-api
+      - chat-server
+      - chat-api-gateway
+    networks:
+      - chatapps
+    env_file:
+      - ./.env
+
+
 
 networks:
   chatapps:

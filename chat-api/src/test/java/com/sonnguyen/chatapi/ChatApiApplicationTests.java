@@ -1,4 +1,4 @@
-package com.sonnguyen.chat_api;
+package com.sonnguyen.chatapi;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
