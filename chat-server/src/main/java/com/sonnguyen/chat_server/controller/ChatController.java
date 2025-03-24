@@ -22,6 +22,7 @@ public class ChatController {
     @MessageMapping("/clientSend")
     @SendTo("/topic/public")
     public String clientSend(@Payload String message) {
+        log.warn(message);
         return message;
     }
 

@@ -29,10 +29,9 @@ const Sidebar = () => {
   const { friendSuggestions, friends, pendingRequests } = useSelector(
     (state) => state.friendship
   );
-  const { channels } = useSelector((state) => state.channel);
-  console.log("channels: ", channels);
-  
-  const { firstname: userFirstname, id: userId } = useSelector(
+  const { channels, currentChannelId } = useSelector((state) => state.channel);
+
+  const { firstname: userFirstname, lastname: userLastname, id: userId } = useSelector(
     (state) => state.auth.user
   );
   const [isAddingChannel, setIsAddingChannel] = useState(false);
@@ -55,21 +54,22 @@ const Sidebar = () => {
     if (e.key === "Enter" && newChannelName.trim()) {
       try {
         const res = await dispatch(fetchCreateChannel(newChannelName)).unwrap();
-        stompClient.subscribe(`/channels/${res.id}`, (msg) =>
-          console.log("Message:", msg.body)
-        );
+        stompClient.subscribe(`/channels/${res.id}`, (msg) => {
+          dispatch(setCurrentChannel(res));
+          dispatch(receiveMessage(JSON.parse(msg.body)));
+        });
         stompClient.publish({
           destination: `/app/channels/${res.id}`,
           body: JSON.stringify({
             key: { channelId: res.id },
             userId,
-            content: `${userFirstname} created channel!`,
+            content: `${userFirstname} ${userLastname} created channel!`,
             type: "NOTICE",
             timestamp: Date.now(),
           }),
         });
+
         setNewChannelName("");
-        dispatch(setCurrentChannel(res));
         setIsAddingChannel(false);
         successToast("Channel added");
       } catch (error) {
@@ -87,18 +87,22 @@ const Sidebar = () => {
     dispatch(removeCurrentChannel());
   };
 
-  useEffect(() => {
-    stompClient.activate();
-    stompClient.onConnect = () => {
-      console.log("WebSocket connected");
-      channels.forEach((channel) =>
-        stompClient.subscribe(`/channels/${channel.id}`, (msg) =>
-          dispatch(receiveMessage(JSON.parse(msg.body)))
-        )
-      );
-    };
-    return () => stompClient.deactivate();
-  }, [channels, dispatch]);
+  useEffect(
+    () => {
+      stompClient.activate();
+      stompClient.onConnect = () => {
+        console.log("WebSocket connected");
+        channels.forEach((channel) =>
+          stompClient.subscribe(`/channels/${channel.id}`, (msg) => {
+            dispatch(receiveMessage(JSON.parse(msg.body)));
+          })
+        );
+      };
+      return () => stompClient.deactivate();
+    },
+    [currentChannelId],
+    channels
+  );
 
   const textFieldSx = {
     "& .MuiOutlinedInput-root": {

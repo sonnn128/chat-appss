@@ -6,9 +6,12 @@ const chatServerUrl = import.meta.env.VITE_REACT_CHAT_SERVER_URL || "http://loca
 
 const stompClient = new Client({
   webSocketFactory: () => new SockJS(`${chatServerUrl}/ws`),
+  reconnectDelay: 5000, 
 });
 
 stompClient.onStompError = (error) => {
-  errorToast(JSON.stringify(error));
+  console.error("WebSocket Error:", error);
+  errorToast("WebSocket connection failed: " + JSON.stringify(error));
 };
+
 export { stompClient };

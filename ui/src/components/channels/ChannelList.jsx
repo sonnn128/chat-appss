@@ -16,7 +16,7 @@ function ChannelList() {
 
   useEffect(() => {
     if (currentChannelId) {
-      dispatch(fetchAllMembersOfChannel(currentChannelId))
+      dispatch(fetchAllMembersOfChannel(currentChannelId));
     }
   }, [currentChannelId]);
 

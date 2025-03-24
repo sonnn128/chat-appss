@@ -6,8 +6,8 @@ import { fetchAllChannels } from "@/stores/middlewares/channelMiddleware";
 import {
   fetchFriendList,
   fetchFriendSuggestions,
-  fetchPendingRequests
-} from "@/stores/middlewares/friendshipMiddleware"
+  fetchPendingRequests,
+} from "@/stores/middlewares/friendshipMiddleware";
 function Main() {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -16,7 +16,8 @@ function Main() {
     dispatch(fetchFriendSuggestions());
     dispatch(fetchAllChannels());
     dispatch(fetchFriendList());
-  }, []);
+    console.log("Fetch success");
+  }, [dispatch]);
 
   return (
     <div className="flex h-screen bg-gray-100 font-sans antialiased overflow-hidden">

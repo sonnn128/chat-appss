@@ -13,7 +13,7 @@ const initialState = {
   error: null,
   currentChannelId: null,
   joinedChannels: [],
-  messagesOfCurrentChannel: []
+  messagesOfCurrentChannel: [],
 };
 
 const channelSlice = createSlice({
@@ -23,11 +23,6 @@ const channelSlice = createSlice({
     createChannel: (state, action) => {
       state.channels.push(action.payload);
     },
-    receiveMessage: (state, action) => {
-      console.log("action.payload: ", action.payload);
-      state.messagesOfCurrentChannel.push(action.payload);
-    },
-    
     setChannels: (state, action) => {
       state.channels = action.payload;
     },
@@ -46,10 +41,22 @@ const channelSlice = createSlice({
       state.currentChannel = null;
       state.currentChannelId = null;
     },
+    receiveMessage: (state, action) => {
+      const message = action.payload;
+      if (message && typeof message === "object") {
+        state.messagesOfCurrentChannel.push(message);
+      } else {
+        console.error("Invalid message payload:", message);
+      }
+    },
+
     setCurrentChannel: (state, action) => {
-      state.currentChannel = action.payload;
-      state.currentChannelId = action.payload.id;
-      state.messagesOfCurrentChannel = action.payload.messages
+      const channel = action.payload;
+      state.currentChannel = channel;
+      state.currentChannelId = channel?.id || null;
+      state.messagesOfCurrentChannel = Array.isArray(channel?.messages)
+        ? channel.messages
+        : [];
     },
   },
   extraReducers: (builder) => {
@@ -117,6 +124,6 @@ export const {
   removeChannel,
   removeCurrentChannel,
   setCurrentChannel,
-  receiveMessage
+  receiveMessage,
 } = channelSlice.actions;
 export default channelSlice.reducer;
