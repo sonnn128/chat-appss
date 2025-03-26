@@ -95,7 +95,10 @@
 			<version>4.1.109.Final</version>
 			<classifier>osx-aarch_64</classifier>
 		</dependency>
-
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
