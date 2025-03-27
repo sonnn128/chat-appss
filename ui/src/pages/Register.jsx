@@ -12,10 +12,8 @@ import {
   FormLabel,
   Input,
   Button,
-  Divider,
   Link,
 } from "@mui/joy";
-import GoogleIcon from "@/utils/GoogleIcon";
 import { useDispatch } from "react-redux";
 import { registerUser } from "@/stores/middlewares/authMiddleware";
 import { errorToast, successToast } from "@/utils/toast";
@@ -97,18 +95,7 @@ function Register() {
               <Button fullWidth type="submit" variant="solid" sx={{ my: 3 }}>
                 Register
               </Button>
-              <Divider>
-                <Typography fontWeight="lg">Or continue with</Typography>
-              </Divider>
-              <Button
-                variant="outlined"
-                color="neutral"
-                fullWidth
-                startDecorator={<GoogleIcon />}
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Sign in with Google
-              </Button>
+
               <Box display="flex" justifyContent="center">
                 <Link fontSize="sm" href="/login" fontWeight="lg">
                   Login here!

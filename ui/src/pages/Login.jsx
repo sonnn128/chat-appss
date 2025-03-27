@@ -8,7 +8,6 @@ import {
   Card,
   Checkbox,
   Container,
-  Divider,
   FormControl,
   FormLabel,
   Grid,
@@ -21,7 +20,6 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 import { loginUser } from "@/stores/middlewares/authMiddleware";
 import customTheme from "@/theme/theme";
-import GoogleIcon from "@/utils/GoogleIcon";
 import { errorToast, successToast } from "@/utils/toast";
 
 function Login() {
@@ -113,14 +111,6 @@ function Login() {
                   name="rememberMe"
                   disabled={isLoading}
                 />
-                <Link
-                  fontSize="sm"
-                  href="/forgot-password"
-                  fontWeight="lg"
-                  disabled={isLoading}
-                >
-                  Forgot your password?
-                </Link>
               </Box>
               <Button
                 fullWidth
@@ -130,21 +120,6 @@ function Login() {
                 sx={{ mb: 3 }}
               >
                 Log in
-              </Button>
-              <Divider sx={{ my: 2 }}>
-                <Typography level="body2" fontWeight="lg">
-                  Or continue with
-                </Typography>
-              </Divider>
-              <Button
-                variant="outlined"
-                color="neutral"
-                fullWidth
-                startDecorator={<GoogleIcon />}
-                disabled={isLoading}
-                sx={{ my: 2 }}
-              >
-                Sign in with Google
               </Button>
               <Box sx={{ textAlign: "center" }}>
                 <Link
