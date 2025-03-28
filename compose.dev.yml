@@ -17,6 +17,7 @@ services:
       - chatapps
     volumes:
       - ./data/mysql:/var/lib/mysql
+      # - ./shopping.sql:/docker-entrypoint-initdb.d/shopping.sql 
   cassandra:
     image: cassandra:latest
     ports:
