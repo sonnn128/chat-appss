@@ -31,9 +31,11 @@ const Sidebar = () => {
   );
   const { channels, currentChannelId } = useSelector((state) => state.channel);
 
-  const { firstname: userFirstname, lastname: userLastname, id: userId } = useSelector(
-    (state) => state.auth.user
-  );
+  const {
+    firstname: userFirstname,
+    lastname: userLastname,
+    id: userId,
+  } = useSelector((state) => state.auth.user);
   const [isAddingChannel, setIsAddingChannel] = useState(false);
   const [newChannelName, setNewChannelName] = useState("");
   const [openModal, setOpenModal] = useState({
@@ -87,22 +89,18 @@ const Sidebar = () => {
     dispatch(removeCurrentChannel());
   };
 
-  useEffect(
-    () => {
-      stompClient.activate();
-      stompClient.onConnect = () => {
-        console.log("WebSocket connected");
-        channels.forEach((channel) =>
-          stompClient.subscribe(`/channels/${channel.id}`, (msg) => {
-            dispatch(receiveMessage(JSON.parse(msg.body)));
-          })
-        );
-      };
-      return () => stompClient.deactivate();
-    },
-    [currentChannelId],
-    channels
-  );
+  useEffect(() => {
+    stompClient.activate();
+    stompClient.onConnect = () => {
+      console.log("WebSocket connected");
+      channels.forEach((channel) =>
+        stompClient.subscribe(`/channels/${channel.id}`, (msg) => {
+          dispatch(receiveMessage(JSON.parse(msg.body)));
+        })
+      );
+    };
+    return () => stompClient.deactivate();
+  }, [channels, dispatch]);
 
   const textFieldSx = {
     "& .MuiOutlinedInput-root": {

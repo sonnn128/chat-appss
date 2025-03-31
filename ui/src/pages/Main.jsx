@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Sidebar from "@/pages/components/Sidebar";
 import ChatSection from "@/pages/components/ChatSection";
 import { fetchAllChannels } from "@/stores/middlewares/channelMiddleware";
@@ -10,6 +10,11 @@ import {
 } from "@/stores/middlewares/friendshipMiddleware";
 function Main() {
   const dispatch = useDispatch();
+  const messagesOfCurrentChannel = useSelector(
+    (state) => state.channel.messagesOfCurrentChannel
+  );
+  console.log("messagesOfCurrentChannel: ", messagesOfCurrentChannel);
+  
   useEffect(() => {
     dispatch(fetchFriendList());
     dispatch(fetchPendingRequests());

@@ -2,9 +2,9 @@ import React, { useRef, useEffect } from "react";
 import { Avatar } from "@mui/material";
 import { useSelector } from "react-redux";
 
-const ChatMessages = ({ selectedUser, getFullName }) => {
+const ChatMessages = ({ getFullName }) => { // Xóa selectedUser nếu không cần
   const messagesEndRef = useRef(null);
-  const { messagesOfCurrentChannel } = useSelector((state) => state.channel);
+  const { messagesOfCurrentChannel, currentChannel } = useSelector((state) => state.channel);
   const currentUserId = useSelector((state) => state.auth.user.id);
 
   useEffect(() => {
@@ -24,8 +24,10 @@ const ChatMessages = ({ selectedUser, getFullName }) => {
       {!isCurrentUser && (
         <Avatar
           sx={{ width: 32, height: 32 }}
-          alt={getFullName(selectedUser)}
-        />
+          alt={getFullName(message.user)} // Lấy tên từ message.user
+        >
+          {message.user?.firstname?.charAt(0).toUpperCase() || "U"} {/* Hiển thị chữ cái đầu nếu không có tên */}
+        </Avatar>
       )}
       <div
         className={`${
@@ -38,23 +40,31 @@ const ChatMessages = ({ selectedUser, getFullName }) => {
       </div>
     </div>
   );
+
   return (
     <div className="flex-1 p-4 overflow-y-auto bg-gray-50">
-      <div className="flex flex-col gap-2">
-        {messagesOfCurrentChannel &&  
-          messagesOfCurrentChannel.map((message) => (
-            <React.Fragment key={message.timestamp}>
-              {message.type === "NOTICE" ? (
-                <NoticeMessage message={message} />
-              ) : (
-                <UserMessage
-                  message={message}
-                  isCurrentUser={message.userId === currentUserId}
-                />
-              )}
-            </React.Fragment>
-          ))}
-      </div>
+      {currentChannel ? (
+        <div className="flex flex-col gap-2">
+          {messagesOfCurrentChannel && messagesOfCurrentChannel.length > 0 ? (
+            messagesOfCurrentChannel.map((message) => (
+              <React.Fragment key={message.timestamp}>
+                {message.type === "NOTICE" ? (
+                  <NoticeMessage message={message} />
+                ) : (
+                  <UserMessage
+                    message={message}
+                    isCurrentUser={message.userId === currentUserId}
+                  />
+                )}
+              </React.Fragment>
+            ))
+          ) : (
+            <p className="text-gray-500 text-center">No messages yet</p>
+          )}
+        </div>
+      ) : (
+        <p className="text-gray-500 text-center">Select a channel to view messages</p>
+      )}
       <div ref={messagesEndRef} />
     </div>
   );

@@ -13,7 +13,8 @@ const initialState = {
   error: null,
   currentChannelId: null,
   joinedChannels: [],
-  messagesOfCurrentChannel: [],
+  messagesByChannel: {}, // Lưu trữ tin nhắn theo channelId
+  messagesOfCurrentChannel: [], // Hiển thị tin nhắn của channel hiện tại
 };
 
 const channelSlice = createSlice({
@@ -40,23 +41,47 @@ const channelSlice = createSlice({
     removeCurrentChannel: (state) => {
       state.currentChannel = null;
       state.currentChannelId = null;
+      state.messagesOfCurrentChannel = [];
     },
     receiveMessage: (state, action) => {
       const message = action.payload;
-      if (message && typeof message === "object") {
-        state.messagesOfCurrentChannel.push(message);
-      } else {
-        console.error("Invalid message payload:", message);
+      if (message && typeof message === "object" && state.currentChannelId) {
+        const channelId = state.currentChannelId;
+        state.messagesByChannel[channelId] =
+          state.messagesByChannel[channelId] || [];
+        state.messagesByChannel[channelId] = [
+          ...state.messagesByChannel[channelId],
+          message,
+        ];
+        state.messagesOfCurrentChannel = [
+          ...state.messagesByChannel[channelId],
+        ];
       }
     },
-
     setCurrentChannel: (state, action) => {
       const channel = action.payload;
       state.currentChannel = channel;
       state.currentChannelId = channel?.id || null;
-      state.messagesOfCurrentChannel = Array.isArray(channel?.messages)
-        ? channel.messages
-        : [];
+
+      if (channel?.id) {
+        state.messagesByChannel[channel.id] =
+          state.messagesByChannel[channel.id] || [];
+
+        if (Array.isArray(channel?.messages)) {
+          const existingLocalMessages = state.messagesByChannel[channel.id] || [];
+          state.messagesByChannel[channel.id] = [
+            ...channel.messages,
+            ...existingLocalMessages.filter(
+              (msg) =>
+                !channel.messages.some((m) => m.key?.messageId === msg.key?.messageId)
+            ),
+          ];
+        }
+
+        state.messagesOfCurrentChannel = [...state.messagesByChannel[channel.id]];
+      } else {
+        state.messagesOfCurrentChannel = [];
+      }
     },
   },
   extraReducers: (builder) => {
@@ -69,6 +94,8 @@ const channelSlice = createSlice({
         state.loading = false;
         state.channels.push(action.payload);
         state.currentChannel = action.payload;
+        state.currentChannelId = action.payload?.id || null;
+        state.messagesOfCurrentChannel = action.payload?.messages || [];
       })
       .addCase(fetchCreateChannel.rejected, (state, action) => {
         state.loading = false;
@@ -80,14 +107,28 @@ const channelSlice = createSlice({
       })
       .addCase(fetchAllChannels.fulfilled, (state, action) => {
         state.loading = false;
-        state.channels = action.payload; // Cập nhật danh sách channels
+        state.channels = action.payload;
+        action.payload.forEach((channel) => {
+          if (channel.id && Array.isArray(channel.messages)) {
+            state.messagesByChannel[channel.id] =
+              state.messagesByChannel[channel.id] || [];
+            state.messagesByChannel[channel.id] = [
+              ...channel.messages,
+              ...state.messagesByChannel[channel.id].filter(
+                (msg) => !channel.messages.some((m) => m.id === msg.id)
+              ),
+            ];
+          }
+        });
+        if (state.currentChannelId) {
+          state.messagesOfCurrentChannel =
+            state.messagesByChannel[state.currentChannelId] || [];
+        }
       })
       .addCase(fetchAllChannels.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-
-      // fetchAllMembersOfChannel
       .addCase(fetchAllMembersOfChannel.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -100,8 +141,6 @@ const channelSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-
-      // addMembersToChannel
       .addCase(addMembersToChannel.pending, (state) => {
         state.loading = true;
         state.error = null;

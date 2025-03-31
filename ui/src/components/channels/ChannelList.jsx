@@ -1,3 +1,4 @@
+// ChannelList.js
 import React, { useEffect } from "react";
 import { Avatar, AvatarGroup } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,7 +11,7 @@ function ChannelList() {
   const { channels, currentChannelId } = useSelector((state) => state.channel);
 
   const onSelectChannel = (channel) => {
-    dispatch(setCurrentChannel(channel));
+    dispatch(setCurrentChannel(channel)); // channel đã chứa messages từ server
     dispatch(removeCurrentFriend());
   };
 
@@ -18,7 +19,7 @@ function ChannelList() {
     if (currentChannelId) {
       dispatch(fetchAllMembersOfChannel(currentChannelId));
     }
-  }, [currentChannelId]);
+  }, [currentChannelId, dispatch]);
 
   return (
     <div className="flex-1 overflow-y-auto px-2">
@@ -40,7 +41,7 @@ function ChannelList() {
               <Avatar alt={channel.name}>
                 {channel.name.charAt(0).toUpperCase()}
               </Avatar>
-              <Avatar alt="member2">G</Avatar> {/* G for Group */}
+              <Avatar alt="member2">G</Avatar>
               <Avatar alt="member3">+</Avatar>
             </AvatarGroup>
             <div className="ml-3 flex-1 min-w-0">

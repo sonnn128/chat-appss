@@ -10,8 +10,9 @@ const ChatSection = () => {
   const currentFriend = useSelector((state) => state.friendship.currentFriend);
 
   const [isMemberModalOpen, setIsMemberModalOpen] = useState(false);
+
   const getFullName = (user) =>
-    user ? `${user.firstname} ${user.lastname}` : "";
+    user ? `${user.firstname} ${user.lastname}` : "Unknown User";
 
   const handleAddMember = () => setIsMemberModalOpen(true);
   const handleCloseMemberModal = () => setIsMemberModalOpen(false);
@@ -30,9 +31,7 @@ const ChatSection = () => {
       {hasActiveChat ? (
         <>
           <ChatHeader onAddMember={handleAddMember} />
-          <ChatMessages
-            getFullName={getFullName}
-          />
+          <ChatMessages getFullName={getFullName} />
           <ChatInput />
         </>
       ) : (

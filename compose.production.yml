@@ -72,7 +72,7 @@ services:
       - chatapps
     env_file:
       - ./.env
-      
+
   chat-ui:
     build: ./ui
     ports:
