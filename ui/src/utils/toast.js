@@ -1,49 +1,50 @@
-import { toast } from 'react-toastify';
+import { toast } from "react-hot-toast";
 
 export const successToast = (message) => {
-    toast.success(message, {
-        position: "top-right",
-        autoClose: 1000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-    });
+  toast.success(message, {
+    duration: 3000,
+    position: "top-center",
+    style: {
+      fontSize: "14px",
+    },
+  });
 };
-
 export const errorToast = (message) => {
-    toast.error(message, {
-        position: "top-right",
-        autoClose: 1000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-    });
+  toast.error(message, {
+    duration: 3000,
+    position: "top-center",
+    style: {
+      fontSize: "14px",
+    },
+  });
 };
 
 export const warningToast = (message) => {
-    toast.warn(message, {
-        position: "top-right",
-        autoClose: 1000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-    });
+  toast.error(message, {
+    duration: 3000,
+    position: "top-center",
+    style: {
+      fontSize: "14px",
+    },
+  });
 };
 
 export const infoToast = (message) => {
-    toast.info(message, {
-        position: "top-right",
-        autoClose: 1000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-    });
+  toast.error(message, {
+    duration: 3000,
+    position: "top-center",
+    style: {
+      fontSize: "14px",
+    },
+  });
+};
+
+export const defaultToast = (message) => {
+  toast.error(message, {
+    duration: 3000,
+    position: "top-center",
+    style: {
+      fontSize: "14px",
+    },
+  });
 };

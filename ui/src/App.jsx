@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 import { fetchUserProfile } from "@/stores/middlewares/authMiddleware";
 import Loading from "@/components/Loading";
@@ -49,15 +47,6 @@ function App() {
           element={user ? <Settings /> : <Navigate to="/login" />}
         />
       </Routes>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        closeOnClick
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
     </>
   );
 }
