@@ -1,0 +1,6 @@
+com/sonnguyen/presence_server/config/RedisConfig.class
+com/sonnguyen/presence_server/websocket/PresenceWebSocketHandler.class
+com/sonnguyen/presence_server/PresenceServerApplication.class
+com/sonnguyen/presence_server/service/PresenceService.class
+com/sonnguyen/presence_server/config/PresenceWebSocketConfig.class
+com/sonnguyen/presence_server/controller/PresenceController.class
