@@ -9,20 +9,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
 public class MessageService {
-    final private RestTemplate restTemplate;
-    private final String chatServerHostname = System.getenv("CHAT_SERVER_HOST")==null?"localhost":System.getenv("CHAT_SERVER_HOST");
-    private final int chatServerPort = Integer.parseInt(System.getenv("CHAT_SERVER_PORT")==null?"8083":System.getenv("CHAT_SERVER_PORT"));
+    private final RestTemplate restTemplate;
+    private static final String CHAT_SERVER_API_BASE = "http://chat-server/api/v1/messages/";
 
-    public List<MessageResponse> fetchAllMessagesOfChannel(UUID channelId){
-        String apiUrl = "http://" + chatServerHostname + ":" + chatServerPort + "/api/v1/messages/" + channelId;
-        MessageResponse[] messages = restTemplate.getForObject(apiUrl, MessageResponse[].class);
-        if (messages != null) {
-            return Arrays.stream(messages).toList();
+    public List<MessageResponse> fetchAllMessagesOfChannel(UUID channelId) {
+        try {
+            String apiUrl = CHAT_SERVER_API_BASE + channelId;
+            MessageResponse[] messages = restTemplate.getForObject(apiUrl, MessageResponse[].class);
+            return messages != null ? Arrays.stream(messages).toList() : new ArrayList<>();
+        } catch (Exception e) {
+            // Log the error and return empty list or throw a custom exception
+            return new ArrayList<>();
         }
-        return new ArrayList<>();
     }
 }
