@@ -11,10 +11,10 @@ import java.util.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "users")
 public class User implements UserDetails {
 
     @Id
