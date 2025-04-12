@@ -39,5 +39,15 @@ services:
     #      - host-port:container-port(6379)
     volumes:
       - ./data/redis:/data
+  nginx:
+    image: nginx:latest
+    container_name: nginx-gateway
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - chatapps
+
 networks:
   chatapps:
