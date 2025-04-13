@@ -15,7 +15,7 @@ import { fetchCreateChannel } from "@/stores/middlewares/channelMiddleware";
 import {
   sendFriendRequest,
   acceptFriendRequest,
-} from "@/stores/middlewares/friendshipMiddleware";
+} from "@/stores/middlewares/friendShipMiddleware";
 import { setCurrentFriend } from "@/stores/slices/friendshipSlice";
 
 import {
