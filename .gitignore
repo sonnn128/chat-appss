@@ -1,6 +1,5 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-.idea/
-.DS_Store
+.env
 data
 compose.prod.yml
 # ui - Reactjs
@@ -9,7 +8,6 @@ ui/.env
 ui/.env.production
 ui/build
 ui/package-lock.json
-ui/dist
 
 # chat-api - Spring Boot
 chat-api/HELP.md
@@ -55,18 +53,53 @@ chat-server/*.iws
 chat-server/*.iml
 chat-server/*.ipr
 
+
+
+# discovery-server Spring Boot
+discovery-server/HELP.md
+/discovery-server/target/
+discovery-server/!.mvn/wrapper/maven-wrapper.jar
+discovery-server/!**/src/main/**/target/
+discovery-server/!**/src/test/**/target/
+
+### STS ###
+discovery-server/.apt_generated
+discovery-server/.classpath
+discovery-server/.factorypath
+discovery-server/.project
+discovery-server/.settings
+discovery-server/.springBeans
+discovery-server/.sts4-cache
+
+### IntelliJ IDEA ###
+discovery-server/.idea
+discovery-server/*.iws
+discovery-server/*.iml
+discovery-server/*.ipr
+
+
+# presence-server Spring Boot
+presence-server/HELP.md
+presence-server/target/
+presence-server/!.mvn/wrapper/maven-wrapper.jar
+presence-server/!**/src/main/**/target/
+presence-server/!**/src/test/**/target/
+
+### STS ###
+presence-server/.apt_generated
+presence-server/.classpath
+presence-server/.factorypath
+presence-server/.project
+presence-server/.settings
+presence-server/.springBeans
+presence-server/.sts4-cache
+
+### IntelliJ IDEA ###
+presence-server/.idea
+presence-server/*.iws
+presence-server/*.iml
+presence-server/*.ipr
+
 storage-server
-
-### Note
-*.md
-
-### env
-.env.example
-
-### yml
-
-### dockx
-*.docx
-*.sql
-.vscode
-# docker-compose.yml
+/.DS_Store
+/.idea/

@@ -7,7 +7,7 @@ import {
   fetchFriendList,
   fetchFriendSuggestions,
   fetchPendingRequests,
-} from "@/stores/middlewares/friendshipMiddleware";
+} from "@/stores/middlewares/friendShipMiddleware";
 function Main() {
   const dispatch = useDispatch();
   const messagesOfCurrentChannel = useSelector(
