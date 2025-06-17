@@ -1,0 +1,50 @@
+# Maven
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/timing.properties
+
+# Gradle
+/build/
+/.gradle/
+/out/
+/bin/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Logs
+*.log
+
+# Environment / Secrets
+.env
+*.env
+
+# System files
+*.swp
+*.swo
+
+# Coverage reports
+jacoco.exec
+coverage-reports/
+
+# Spring Boot Devtools
+.spring-boot-devtools.properties
