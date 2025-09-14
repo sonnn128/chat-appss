@@ -1,11 +1,11 @@
 # application.yml
 spring:
   application:
-    name: chat-api
+    name: ${CHAT_API_NAME:chat-api}
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://${EUREKA_REGISTER:localhost}:8761/eureka/
     register-with-eureka: true
     fetch-registry: true

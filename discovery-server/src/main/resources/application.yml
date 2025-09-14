@@ -1,5 +1,5 @@
 server:
-  port: 8761
+  port: ${DISCOVERY_SERVER_PORT:8761}
   output:
     ansi:
       enabled: ALWAYS
@@ -10,4 +10,4 @@ eureka:
 
 spring:
   application:
-    name: discovery-server
+    name: ${DISCOVERY_SERVER_NAME:discovery-server}

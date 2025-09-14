@@ -2,6 +2,13 @@
 - Docker
 - JDK 17 + maven
 - Nodejs
+## For docker
+```
+cd <project folder>
+cp .env.example .env
+docker compose up -d
+```
+then visit http://localhost
 ## For develop
 ### Run database with docker
 ```
